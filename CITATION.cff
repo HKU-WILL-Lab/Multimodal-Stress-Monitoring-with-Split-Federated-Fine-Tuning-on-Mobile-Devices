@@ -1,0 +1,68 @@
+cff-version: 1.2.0
+message: >-
+  TODO before release: replace the placeholder author fields below. After
+  doing so, please cite this software using this metadata.
+title: Clean Split-LoRA for Android
+type: software
+version: 0.1.0
+date-released: 2026-08-23
+license: Apache-2.0
+authors:
+  - family-names: TODO-REPLACE
+    given-names: TODO-REPLACE
+abstract: >-
+  A clean-room split-learning implementation for LoRA fine-tuning of Gemma 3
+  270M across an Android arm64 prefix client and a Python GPU suffix service,
+  with sample-weighted aggregation of client-side prefix adapters.
+keywords:
+  - split learning
+  - LoRA
+  - Android
+  - federated learning
+  - language models
+references:
+  - type: article
+    title: >-
+      SplitLoRA: A Split Parameter-Efficient Fine-Tuning Framework for Large
+      Language Models
+    authors:
+      - family-names: Lin
+        given-names: Zheng
+      - family-names: Hu
+        given-names: Xuanjie
+      - family-names: Zhang
+        given-names: Yuxin
+      - family-names: Chen
+        given-names: Zhe
+      - family-names: Fang
+        given-names: Zihan
+      - family-names: Chen
+        given-names: Xianhao
+      - family-names: Li
+        given-names: Ang
+      - family-names: Vepakomma
+        given-names: Praneeth
+      - family-names: Gao
+        given-names: Yue
+    year: 2024
+    url: https://arxiv.org/abs/2407.00952
+  - type: article
+    title: "SplitFed: When Federated Learning Meets Split Learning"
+    authors:
+      - family-names: Thapa
+        given-names: Chandra
+      - family-names: Chamikara
+        given-names: M. A. P.
+      - family-names: Camtepe
+        given-names: Seyit
+      - family-names: Sun
+        given-names: Lichao
+    year: 2020
+    url: https://arxiv.org/abs/2004.12088
+  - type: software
+    title: MobileFineTuner
+    authors:
+      - name: Mobile LLM Fine-Tuning Project Contributors
+    commit: b62d3b12a597e05489e6e8ef025527c613c94837
+    url: >-
+      https://github.com/Edge-Intelligence-Lab/MobileFineTuner/tree/b62d3b12a597e05489e6e8ef025527c613c94837

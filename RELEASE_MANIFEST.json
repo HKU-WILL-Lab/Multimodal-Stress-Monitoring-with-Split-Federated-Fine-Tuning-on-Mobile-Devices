@@ -1,0 +1,236 @@
+{
+  "files": [
+    {
+      "path": ".gitignore",
+      "sha256": "f31f5a33748d60defbe7b92c8623bcdae0003c9d6f2c69b0538629c85609ac43",
+      "size": 1449
+    },
+    {
+      "path": "android/include/sfl/client_options.h",
+      "sha256": "cc9681f03f2716b5e2d4b24d462f842f25ec1e7040332216e8c0172fa30bd091",
+      "size": 949
+    },
+    {
+      "path": "android/include/sfl/client_runner.h",
+      "sha256": "d602a5d025a2681ea4b2c7382a365b821eac3bdb29288932d9192ffb1c94902b",
+      "size": 141
+    },
+    {
+      "path": "android/include/sfl/lora_state.h",
+      "sha256": "894058baa54a0367f1f471c376d6da28de30eb6c4f1ff426cfb888cf0c36dd8a",
+      "size": 703
+    },
+    {
+      "path": "android/include/sfl/metrics.h",
+      "sha256": "a1f8a9f613da7fff3eab04538ec58136a3bc4b005fc220207fe6428d97274e8a",
+      "size": 644
+    },
+    {
+      "path": "android/include/sfl/tensor_codec.h",
+      "sha256": "c946f4743ba01edb0ce9066eae281f65ab838e442ca3054c01b0a3480f1a4655",
+      "size": 1188
+    },
+    {
+      "path": "android/include/sfl/wiki_text_stream.h",
+      "sha256": "b1d14e97b650074bae564100e4a3ba1ff1c683428f1852942ebfdc903d12bdab",
+      "size": 1503
+    },
+    {
+      "path": "android/src/client_options.cpp",
+      "sha256": "4ec2072dbab224f5d9d2856772b0144f8964846327c7c9c84a99bfa261ea2cd4",
+      "size": 5934
+    },
+    {
+      "path": "android/src/client_runner.cpp",
+      "sha256": "1cdc2414cfd361640790a23a436eed9a19c5e29d07ba81e4459c40229ec3f660",
+      "size": 16629
+    },
+    {
+      "path": "android/src/lora_state.cpp",
+      "sha256": "ba4059de015d19827b440f49dccc2b8e7034c5e619bea75577250a2f0d0203a2",
+      "size": 4343
+    },
+    {
+      "path": "android/src/main.cpp",
+      "sha256": "43ef8eb631422edd931422599aa516a00ba0028c16f96d0a2bfc6ea0da7edc31",
+      "size": 736
+    },
+    {
+      "path": "android/src/metrics.cpp",
+      "sha256": "3428373c536d126a61c08b5941342e3565f5a5186d8484de3e26f4e7937d6e5a",
+      "size": 2081
+    },
+    {
+      "path": "android/src/tensor_codec.cpp",
+      "sha256": "821678d89a634819d4d998542001b5af482878756dfa883b42019bc1950daaab",
+      "size": 7093
+    },
+    {
+      "path": "android/src/wiki_text_stream.cpp",
+      "sha256": "59d817d41934008943e71b330e648db783fe6f7872733d756ade3db9aa1484b6",
+      "size": 3411
+    },
+    {
+      "path": "CITATION.cff",
+      "sha256": "3e3bde73b4afc34e38504c9d116df961bff2eb7ccd408a928d50ce4aed99b35a",
+      "size": 2051
+    },
+    {
+      "path": "configs/smoke_single_phone.json",
+      "sha256": "710360daf1f46a6211206007b64b92374eae0d72bcdf0806bd70ce20e5e78c43",
+      "size": 849
+    },
+    {
+      "path": "LICENSE",
+      "sha256": "7c87de7b05f386f6c92697cfeb81c1cb2864e25394ff1fecbfa475632f5bec62",
+      "size": 11357
+    },
+    {
+      "path": "proto/sfl_clean.proto",
+      "sha256": "ae5c12078f597013a8e09a7a5c0873eec1f13b93b0ef2a0cd67224dd824eb98a",
+      "size": 2225
+    },
+    {
+      "path": "PROVENANCE.md",
+      "sha256": "02d7c17204e447629774de71755fe0ce536d7baa541a775f33a89bbde7f832ea",
+      "size": 3138
+    },
+    {
+      "path": "pyproject.toml",
+      "sha256": "eb3f68cc5ec0f35b96dac4277b312fa985e3be684c1f8027f94d73405d05a53f",
+      "size": 800
+    },
+    {
+      "path": "python/sfl_clean/__init__.py",
+      "sha256": "502c9078d1f94396ef6331a9c7017c37fedcc25150003ec3c6d285a9e2927356",
+      "size": 98
+    },
+    {
+      "path": "python/sfl_clean/aggregation.py",
+      "sha256": "d7beaf0b8a77cb22fe0337915e5870cee763c62700f5e1fac87ec574b4944da9",
+      "size": 2748
+    },
+    {
+      "path": "python/sfl_clean/checkpoint.py",
+      "sha256": "188d16115304524e8b8651c415e75c0f8d9be2c61b5453fb40bf2f1be7aa951c",
+      "size": 1891
+    },
+    {
+      "path": "python/sfl_clean/cli_coordinator.py",
+      "sha256": "0319dc375f1305ed621fb6cc2c254187e4ebf986cb1c4febdc804f69634886e9",
+      "size": 1243
+    },
+    {
+      "path": "python/sfl_clean/cli_suffix.py",
+      "sha256": "66cbf12084b7a661c204a70a4477be1d9b1fb0c3c51081fe35b18ba2a682bee5",
+      "size": 2171
+    },
+    {
+      "path": "python/sfl_clean/config.py",
+      "sha256": "f009189618ce8304a0e22caaf84487dec94a2b6b6e0ef89ce60335a55b4f1975",
+      "size": 7363
+    },
+    {
+      "path": "python/sfl_clean/coordinator.py",
+      "sha256": "7417f5bbe936a7ff3818dafd1a3e3fc52e481fa89fb3889946fbb3b2ab28c9b4",
+      "size": 7286
+    },
+    {
+      "path": "python/sfl_clean/errors.py",
+      "sha256": "81d3953cac80bb59e911f7be5cfdf717ef183c80d9d94d0a44312b0911041843",
+      "size": 570
+    },
+    {
+      "path": "python/sfl_clean/gemma_suffix.py",
+      "sha256": "249fbc23e34c74fd2b0e2092e935a8c41828236117cc4c92d34285bd10800dce",
+      "size": 4762
+    },
+    {
+      "path": "python/sfl_clean/grpc_services.py",
+      "sha256": "ec08ab9d104b3bc099c574979482ff09b4e6e2edf488cc3c0ff0892b83a8805a",
+      "size": 10264
+    },
+    {
+      "path": "python/sfl_clean/metrics.py",
+      "sha256": "3eebf5b27d7600d8a9181a9a606622dcb181f65fa7ef81572c589a2d37dfb5ec",
+      "size": 2597
+    },
+    {
+      "path": "python/sfl_clean/objective.py",
+      "sha256": "d91bfe6e730485ab4b16107bb27a0eeccf36ae35202406386b38c026c714b06f",
+      "size": 2008
+    },
+    {
+      "path": "python/sfl_clean/proto_runtime.py",
+      "sha256": "ed33481e41cdfccf37c646efaa0b53f481724b9fb51075ff7ba61f0b115d07ae",
+      "size": 2076
+    },
+    {
+      "path": "python/sfl_clean/suffix.py",
+      "sha256": "e9cccd57fd6dcc729f811c675e5233d0d509bd09ffe75cb53bc5a7809594fba5",
+      "size": 4858
+    },
+    {
+      "path": "python/sfl_clean/tensor_codec.py",
+      "sha256": "7c76717d2cdbf134b05de9d02fb3b45bf368aaaabfd77be458e6e77f4ea9ff97",
+      "size": 6903
+    },
+    {
+      "path": "README.md",
+      "sha256": "8001d77098e210f4087ce1ddf09eb6994614993e8a6227f5d95e2525889da973",
+      "size": 3663
+    },
+    {
+      "path": "requirements-release.txt",
+      "sha256": "721f23254b9d746f7037d6af900245c15b214031994a50a6528f40615d8db9d1",
+      "size": 200
+    },
+    {
+      "path": "scripts/integrity_check.py",
+      "sha256": "3f1cb837b581d3f5b41aebfb019d4f42a88d0e5838df96f52cb4d96d640f4473",
+      "size": 6675
+    },
+    {
+      "path": "scripts/release_manifest.py",
+      "sha256": "8c4119641e29cd07503af4dedca8482a73e6a9d7e9e4f6c94e83369562bb2da7",
+      "size": 10594
+    },
+    {
+      "path": "tests/conftest.py",
+      "sha256": "ea2d67bfd2f441ace5dba865186f467f755c31ed99058cb42554e53772f6e61c",
+      "size": 211
+    },
+    {
+      "path": "tests/test_aggregation.py",
+      "sha256": "0e84a58c346798f3bf07d2658bc1d4af7c4a7017cf079dd2d8f5bfb35401f02b",
+      "size": 1293
+    },
+    {
+      "path": "tests/test_coordinator.py",
+      "sha256": "f0ec6b04d5413df2ca54858100a92230721a23a068d490f32203d756c22f926b",
+      "size": 2273
+    },
+    {
+      "path": "tests/test_grpc_smoke.py",
+      "sha256": "85b2a805f86a7d7428af560c3404c68f2e34931db0177b94b4d4273b5efb92d6",
+      "size": 5859
+    },
+    {
+      "path": "tests/test_objective.py",
+      "sha256": "2535af6e4445beef93dcfbdfedef4c3f59c896cd113280b165a159f2bb2dc6e9",
+      "size": 795
+    },
+    {
+      "path": "tests/test_tensor_codec.py",
+      "sha256": "b0f8fedecb8c41fc87aa3848fc7c47500b3a39c64b4b393d673d741fabfc969a",
+      "size": 1810
+    },
+    {
+      "path": "THIRD_PARTY_NOTICES.md",
+      "sha256": "2fe0c16320b9489350c00cc5be9f297e8aa7965cb20dc4dd6900f57f9d40ede2",
+      "size": 2003
+    }
+  ],
+  "format": "sfl-clean-release-manifest-v1",
+  "hash_algorithm": "sha256"
+}

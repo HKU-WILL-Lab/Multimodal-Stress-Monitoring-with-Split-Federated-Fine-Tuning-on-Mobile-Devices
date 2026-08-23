@@ -1,0 +1,3 @@
+# Release-manifest and integrity tooling intentionally use only the Python
+# standard library. Runtime/package dependencies belong to the Python
+# implementation metadata and are not duplicated here.
