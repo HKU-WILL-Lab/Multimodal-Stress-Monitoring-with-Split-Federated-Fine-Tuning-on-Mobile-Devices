@@ -6,9 +6,14 @@
       "size": 1449
     },
     {
+      "path": "android/CMakeLists.txt",
+      "sha256": "7662b0462ac9039e8ea5b6b517cb468e0ceafe429251be203f9d842aef45ec6b",
+      "size": 3729
+    },
+    {
       "path": "android/include/sfl/client_options.h",
-      "sha256": "cc9681f03f2716b5e2d4b24d462f842f25ec1e7040332216e8c0172fa30bd091",
-      "size": 949
+      "sha256": "52043d354706eaa52f9988b6a1aa18ee9fa76b62544621a9fbea15fee9723b0e",
+      "size": 997
     },
     {
       "path": "android/include/sfl/client_runner.h",
@@ -36,14 +41,19 @@
       "size": 1503
     },
     {
+      "path": "android/README.md",
+      "sha256": "a7ed7cc5ed5f84509f71f5193cbfd7a5f27b06a96d9d022257bb436ed9c6b9e3",
+      "size": 3166
+    },
+    {
       "path": "android/src/client_options.cpp",
-      "sha256": "4ec2072dbab224f5d9d2856772b0144f8964846327c7c9c84a99bfa261ea2cd4",
-      "size": 5934
+      "sha256": "1ad92c48be721d01a0aa8a81058ecf88f2563e74929bcc3bea063b797afff5d4",
+      "size": 11597
     },
     {
       "path": "android/src/client_runner.cpp",
-      "sha256": "1cdc2414cfd361640790a23a436eed9a19c5e29d07ba81e4459c40229ec3f660",
-      "size": 16629
+      "sha256": "1b3369b0171a684d703df7cd5fd16e3d1666a061a82b9c26423ffe17f7be126c",
+      "size": 16840
     },
     {
       "path": "android/src/lora_state.cpp",
@@ -71,6 +81,16 @@
       "size": 3411
     },
     {
+      "path": "android/tests/test_tensor_codec.cpp",
+      "sha256": "cd3a5572813a07e7ca63e09b3ddc62f7d61f7023665ec2ebc59a3fa6aa57c2b8",
+      "size": 1294
+    },
+    {
+      "path": "android/tests/test_wikitext_stream.cpp",
+      "sha256": "e825f4298b078db6a5320542af674d90a4146ea9c780e6282bbd31ddeb1dcaaf",
+      "size": 1390
+    },
+    {
       "path": "CITATION.cff",
       "sha256": "3e3bde73b4afc34e38504c9d116df961bff2eb7ccd408a928d50ce4aed99b35a",
       "size": 2051
@@ -84,6 +104,26 @@
       "path": "LICENSE",
       "sha256": "7c87de7b05f386f6c92697cfeb81c1cb2864e25394ff1fecbfa475632f5bec62",
       "size": 11357
+    },
+    {
+      "path": "mft_patch/apply_and_verify.ps1",
+      "sha256": "f10d557ca5f873014a483460ed06fc55d0f6fd9143b3146e05195b3f47699243",
+      "size": 2044
+    },
+    {
+      "path": "mft_patch/apply_and_verify.sh",
+      "sha256": "5336e14663ce375ad86e64ee621dee84baa3e4e67b055e5e21526ea02f7d1501",
+      "size": 1172
+    },
+    {
+      "path": "mft_patch/mobilefinetuner-hidden-span.patch",
+      "sha256": "3f5ab1721eac39bb88cb416ab2bf0645d21d92ae5bf437fc6a13a893b775a489",
+      "size": 16594
+    },
+    {
+      "path": "mft_patch/README.md",
+      "sha256": "305e41f2d5211d86690e5a9f4488e5e15955909c19ebd1ad79dcc4194a49c2c1",
+      "size": 1088
     },
     {
       "path": "proto/sfl_clean.proto",
@@ -142,8 +182,8 @@
     },
     {
       "path": "python/sfl_clean/gemma_suffix.py",
-      "sha256": "249fbc23e34c74fd2b0e2092e935a8c41828236117cc4c92d34285bd10800dce",
-      "size": 4762
+      "sha256": "defcd9118aad45f3278fcdecea35ff3bdfd4414590176b3f3acfee0145e4acb0",
+      "size": 4755
     },
     {
       "path": "python/sfl_clean/grpc_services.py",
@@ -186,6 +226,16 @@
       "size": 200
     },
     {
+      "path": "scripts/build_android.ps1",
+      "sha256": "b84335aa02b72a358347eb0d665ed21bf18feb14c1713d26faddc8f8f87f2efc",
+      "size": 6872
+    },
+    {
+      "path": "scripts/build_host.ps1",
+      "sha256": "5d67a4f666ec4d50e75b73afc6f0c4d18f70f7110809eb46b13487bf7e74a9e3",
+      "size": 1076
+    },
+    {
       "path": "scripts/integrity_check.py",
       "sha256": "3f1cb837b581d3f5b41aebfb019d4f42a88d0e5838df96f52cb4d96d640f4473",
       "size": 6675
@@ -194,6 +244,16 @@
       "path": "scripts/release_manifest.py",
       "sha256": "8c4119641e29cd07503af4dedca8482a73e6a9d7e9e4f6c94e83369562bb2da7",
       "size": 10594
+    },
+    {
+      "path": "scripts/run_android_smoke.ps1",
+      "sha256": "894cd34dfcbac59a23219b2909c6e80a04ea16594e029ead7466b074ea8991fa",
+      "size": 1864
+    },
+    {
+      "path": "scripts/stage_android.ps1",
+      "sha256": "58f68536b12bad78a23d11bb13e34465dfdab2052c17e28e0e6a9348d815ce56",
+      "size": 1771
     },
     {
       "path": "tests/conftest.py",
@@ -209,6 +269,11 @@
       "path": "tests/test_coordinator.py",
       "sha256": "f0ec6b04d5413df2ca54858100a92230721a23a068d490f32203d756c22f926b",
       "size": 2273
+    },
+    {
+      "path": "tests/test_gemma_suffix.py",
+      "sha256": "093158f8aaff372e9318a47cd6f8baf5a7c890ec372fbd1c63580e7c0268abfc",
+      "size": 1347
     },
     {
       "path": "tests/test_grpc_smoke.py",
