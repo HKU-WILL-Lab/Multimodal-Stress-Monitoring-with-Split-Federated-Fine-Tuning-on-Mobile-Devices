@@ -90,7 +90,7 @@ def load_gemma3_270m_suffix(
         raise InvalidRequest("LoRA dropout must be in [0, 1)")
     dtype = torch.bfloat16 if device.type == "cuda" else torch.float32
     base = AutoModelForCausalLM.from_pretrained(
-        source, torch_dtype=dtype, local_files_only=local_files_only
+        source, dtype=dtype, local_files_only=local_files_only
     )
     config = base.config
     if (
@@ -128,4 +128,3 @@ def load_gemma3_270m_suffix(
         if parameter.requires_grad and "lora_" not in name:
             raise RuntimeError(f"PEFT left non-LoRA parameter trainable: {name}")
     return suffix
-
