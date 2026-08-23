@@ -1,0 +1,99 @@
+syntax = "proto3";
+
+package sfl.clean.v1;
+
+option java_multiple_files = true;
+option java_package = "org.sflclean.proto.v1";
+option java_outer_classname = "SflCleanProtocol";
+
+// Tensor values are stored in C-contiguous row-major order. Numeric bytes use
+// little-endian byte order. The name is part of the tensor identity and must
+// be stable across rounds.
+message Tensor {
+  enum DType {
+    DTYPE_UNSPECIFIED = 0;
+    FLOAT32 = 1;
+    INT64 = 2;
+  }
+
+  string name = 1;
+  repeated int64 shape = 2;
+  DType dtype = 3;
+  bytes data = 4;
+}
+
+message SplitStepRequest {
+  uint32 protocol_version = 1;
+  string client_id = 2;
+  uint64 global_round = 3;
+  uint64 local_step = 4;
+  uint32 cut_layer = 5;
+  Tensor activation = 6;
+  Tensor token_ids = 7;
+  Tensor attention_mask = 8;
+}
+
+message SplitStepResponse {
+  Tensor activation_gradient = 1;
+  float loss = 2;
+  float token_accuracy = 3;
+  uint64 server_step = 4;
+}
+
+service SuffixService {
+  rpc TrainSplitStep(SplitStepRequest) returns (SplitStepResponse);
+}
+
+enum RoundState {
+  ROUND_STATE_UNSPECIFIED = 0;
+  TRAIN = 1;
+  WAIT = 2;
+  DONE = 3;
+}
+
+message FetchRoundRequest {
+  uint32 protocol_version = 1;
+  string client_id = 2;
+  uint64 last_completed_round = 3;
+}
+
+message FetchRoundResponse {
+  RoundState state = 1;
+  uint64 global_round = 2;
+  repeated Tensor prefix_tensors = 3;
+  uint32 submissions_received = 4;
+  uint32 submission_quorum = 5;
+}
+
+message BootstrapRequest {
+  uint32 protocol_version = 1;
+  string client_id = 2;
+  repeated Tensor prefix_tensors = 3;
+}
+
+message BootstrapResponse {
+  RoundState state = 1;
+  uint64 global_round = 2;
+  repeated Tensor prefix_tensors = 3;
+}
+
+message SubmitUpdateRequest {
+  uint32 protocol_version = 1;
+  string client_id = 2;
+  uint64 global_round = 3;
+  uint64 processed_sequences = 4;
+  repeated Tensor prefix_tensors = 5;
+}
+
+message SubmitUpdateResponse {
+  RoundState state = 1;
+  uint64 global_round = 2;
+  uint32 submissions_received = 3;
+  uint32 submission_quorum = 4;
+}
+
+service RoundCoordinator {
+  rpc FetchRound(FetchRoundRequest) returns (FetchRoundResponse);
+  rpc Bootstrap(BootstrapRequest) returns (BootstrapResponse);
+  rpc SubmitUpdate(SubmitUpdateRequest) returns (SubmitUpdateResponse);
+}

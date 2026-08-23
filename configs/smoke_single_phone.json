@@ -1,0 +1,36 @@
+{
+  "protocol_version": 1,
+  "run_id": "single-phone-smoke",
+  "suffix_rpc": {
+    "bind": "0.0.0.0:50051",
+    "max_message_bytes": 67108864,
+    "deadline_seconds": 30.0,
+    "worker_threads": 4
+  },
+  "coordinator_rpc": {
+    "bind": "0.0.0.0:50052",
+    "max_message_bytes": 67108864,
+    "deadline_seconds": 30.0,
+    "worker_threads": 4
+  },
+  "model": {
+    "source": "google/gemma-3-270m",
+    "local_files_only": true,
+    "device": "cuda",
+    "lora_rank": 8,
+    "lora_alpha": 16,
+    "lora_dropout": 0.0,
+    "learning_rate": 0.0002
+  },
+  "training": {
+    "total_rounds": 2,
+    "submission_quorum": 1,
+    "cut_layer": 1,
+    "batch_size": 1,
+    "sequence_length": 16,
+    "local_steps": 1,
+    "gradient_clip_norm": 1.0
+  },
+  "metrics_path": "runtime/metrics/single-phone-smoke.jsonl",
+  "checkpoint_root": "runtime/checkpoints"
+}

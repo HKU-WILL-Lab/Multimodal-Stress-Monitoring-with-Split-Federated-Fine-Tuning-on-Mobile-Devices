@@ -1,0 +1,41 @@
+[build-system]
+requires = ["setuptools>=80"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "sfl-clean"
+version = "0.1.0"
+description = "Clean split-learning suffix and round coordinator"
+requires-python = ">=3.12,<3.15"
+dependencies = [
+  "grpcio==1.83.0",
+  "numpy==2.5.1",
+  "protobuf==7.35.1",
+  "torch==2.13.0",
+]
+
+[project.optional-dependencies]
+model = [
+  "peft==0.20.0",
+  "transformers==5.15.0",
+]
+dev = [
+  "grpcio-tools==1.83.0",
+  "pytest==9.1.1",
+]
+
+[project.scripts]
+sfl-build-proto = "sfl_clean.proto_runtime:main"
+sfl-coordinator = "sfl_clean.cli_coordinator:main"
+sfl-suffix = "sfl_clean.cli_suffix:main"
+
+[tool.setuptools]
+package-dir = {"" = "python"}
+
+[tool.setuptools.packages.find]
+where = ["python"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+addopts = "-q"
+
