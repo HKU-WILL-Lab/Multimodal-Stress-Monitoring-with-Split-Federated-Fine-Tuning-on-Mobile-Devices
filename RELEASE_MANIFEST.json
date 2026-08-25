@@ -152,8 +152,8 @@
     },
     {
       "path": "python/sfl_clean/checkpoint.py",
-      "sha256": "188d16115304524e8b8651c415e75c0f8d9be2c61b5453fb40bf2f1be7aa951c",
-      "size": 1891
+      "sha256": "0cf33add081f52cda826c246eff32b9037e52830dba602a0e1b05bd895e47901",
+      "size": 2085
     },
     {
       "path": "python/sfl_clean/cli_coordinator.py",
@@ -264,6 +264,11 @@
       "path": "tests/test_aggregation.py",
       "sha256": "0e84a58c346798f3bf07d2658bc1d4af7c4a7017cf079dd2d8f5bfb35401f02b",
       "size": 1293
+    },
+    {
+      "path": "tests/test_checkpoint.py",
+      "sha256": "25221ffc2c7eb3a23788ae8a848c818bed3d28d28e6a25b82f1e7401fd1f7e20",
+      "size": 834
     },
     {
       "path": "tests/test_coordinator.py",

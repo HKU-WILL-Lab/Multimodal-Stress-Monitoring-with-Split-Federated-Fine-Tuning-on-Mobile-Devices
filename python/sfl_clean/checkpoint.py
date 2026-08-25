@@ -2,7 +2,6 @@
 
 from __future__ import annotations
 
-import hashlib
 import json
 import os
 from pathlib import Path
@@ -30,9 +29,12 @@ def save_lora_checkpoint(
     staging.mkdir()
     tensors: list[dict[str, object]] = []
     try:
-        for name in sorted(state):
+        for index, name in enumerate(sorted(state)):
             value = state[name].detach().to(device="cpu", dtype=torch.float32).contiguous()
-            filename = hashlib.sha256(name.encode("utf-8")).hexdigest() + ".f32le"
+            # Tensor identity lives in the inspectable manifest. A bounded,
+            # deterministic ordinal avoids both hash collisions and Windows
+            # path-limit failures in deeply nested research workspaces.
+            filename = f"tensor-{index:04d}.f32le"
             array = np.asarray(value).astype(np.dtype("<f4"), copy=False)
             (staging / filename).write_bytes(array.tobytes(order="C"))
             tensors.append(
@@ -55,4 +57,3 @@ def save_lora_checkpoint(
             shutil.rmtree(staging)
         raise
     return directory
-
