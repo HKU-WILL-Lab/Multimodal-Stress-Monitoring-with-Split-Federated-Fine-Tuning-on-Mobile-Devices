@@ -25,7 +25,6 @@ medical device or diagnostic tool.
 | `apps/` | Headless phone/Watch8 runtime, sensing, transport, and shared logic |
 | `configs/` | Publication-safe configuration templates |
 | `docs/` | Reproduction and release documentation |
-| `scripts/` | Source-release audit and deterministic manifest tools |
 
 ## What is included
 
@@ -46,6 +45,12 @@ K-EmoCon data, exported `.pte` programs, `.sflsensor` files, checkpoints,
 Samsung SDK binaries, native libraries, APKs, credentials, device identifiers,
 and training logs. Obtain each external dependency or asset under its own
 terms and generate local runtime files using the documented scripts.
+
+The source code in this repository was developed for the MobiWellbeing
+research prototype. Third-party project source code is not vendored; only the
+standard Gradle Wrapper files are included for build bootstrapping. External
+dependencies remain subject to their respective licenses; see
+[THIRD_PARTY_NOTICES.md](THIRD_PARTY_NOTICES.md).
 
 In particular, Llama 3.2 materials remain subject to Meta's separate terms. Do
 not add them to the Git history.
@@ -75,18 +80,6 @@ provides a broader Flower-based platform for heterogeneous federated LLM
 fine-tuning and could also support this class of application. This repository
 uses its own focused SFL protocol and does not require EdgeFlowerTune or Flower
 at build time or runtime.
-
-## Releasing safely
-
-Read [THIRD_PARTY_NOTICES.md](THIRD_PARTY_NOTICES.md),
-[PROVENANCE.md](PROVENANCE.md), and
-[RELEASE_CHECKLIST.md](RELEASE_CHECKLIST.md) before publishing or distributing
-binaries. Then run:
-
-```powershell
-py -3 scripts/release_manifest.py --write
-py -3 scripts/release_check.py
-```
 
 ## Usage rights
 

@@ -7,8 +7,8 @@ sensor-to-LLM projector, and exchanges boundary activations/gradients with a
 Python/PyTorch main server. A separate federated server performs
 sample-weighted aggregation of the client-side trainable state.
 
-The SFL implementation was independently authored. Its source boundary and
-inputs are recorded in [the project provenance](../PROVENANCE.md).
+The SFL implementation was independently authored. External dependencies and
+assets are listed in [`THIRD_PARTY_NOTICES.md`](../THIRD_PARTY_NOTICES.md).
 
 ## Supported workload
 
@@ -83,13 +83,7 @@ configuration, logs, and checkpoints are intentionally absent.
 | `android/` | Android arm64 C++ client and build files. |
 | `configs/` | Publication-safe server, client, split, and inference examples. |
 | `tests/` | Protocol, aggregation, round-state, objective, and smoke tests. |
-| `scripts/` | Build/run support and release-integrity tooling. |
-
-## Release integrity
-
-Publication checks are maintained at the repository root. Follow
-[`RELEASE_CHECKLIST.md`](../RELEASE_CHECKLIST.md) and regenerate the release
-manifest only from a reviewed source tree.
+| `scripts/` | Build and deployment helpers. |
 
 ## Research references
 
