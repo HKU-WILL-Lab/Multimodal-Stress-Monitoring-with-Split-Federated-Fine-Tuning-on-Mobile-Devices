@@ -188,6 +188,20 @@ Detailed preparation, build, staging, and execution commands are provided in:
 - Full local post-training inference requires a compatible embedding-input
   Llama decoder export and the matching trained alignment checkpoint.
 
+## Acknowledgements
+
+The client-side training implementation builds on
+[MobileFineTuner](https://github.com/Edge-Intelligence-Lab/MobileFineTuner),
+and on-device model execution uses
+[ExecuTorch](https://github.com/pytorch/executorch). The documented multimodal
+workflow uses [NormWear](https://github.com/Mobile-Sensing-and-UbiComp-Laboratory/NormWear)
+for time-series encoding and follows the
+[OpenTSLM-SP](https://github.com/OpenTSLM/OpenTSLM) alignment architecture.
+The experimental data preparation supports
+[K-EmoCon](https://doi.org/10.1038/s41597-020-00630-y).
+Full references and third-party notices are listed in
+[THIRD_PARTY_NOTICES.md](THIRD_PARTY_NOTICES.md).
+
 ## Paper
 
 This repository accompanies the MobiHoc 2026 demo submission:

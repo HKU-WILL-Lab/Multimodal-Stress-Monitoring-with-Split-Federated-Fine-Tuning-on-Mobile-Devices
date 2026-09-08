@@ -87,9 +87,16 @@ configuration, logs, and checkpoints are intentionally absent.
 
 ## Research references
 
+- [OpenTSLM: time-series/LLM alignment](https://arxiv.org/abs/2510.02410)
+- [NormWear: pretrained wearable-signal encoder](https://doi.org/10.1145/3803808)
+- [K-EmoCon: experimental dataset](https://doi.org/10.1038/s41597-020-00630-y)
+- [MobileFineTuner: client-side training engine](https://arxiv.org/abs/2512.08211)
 - [SplitLoRA, arXiv:2407.00952](https://arxiv.org/abs/2407.00952)
 - [SplitFed, arXiv:2004.12088](https://arxiv.org/abs/2004.12088)
 - [MobileFineTuner pinned source](https://github.com/Edge-Intelligence-Lab/MobileFineTuner/tree/b62d3b12a597e05489e6e8ef025527c613c94837)
+
+Author credits, official project links, and dependency notices are recorded in
+[THIRD_PARTY_NOTICES.md](../THIRD_PARTY_NOTICES.md).
 
 No reuse license is currently granted for newly authored project code.
 External software, model assets, and datasets retain their own terms; see
