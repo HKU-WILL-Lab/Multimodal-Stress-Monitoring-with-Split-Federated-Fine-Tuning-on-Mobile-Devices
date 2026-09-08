@@ -1,8 +1,7 @@
-# MobiWellbeing Demo Apps
+# Mobile and Wearable Applications
 
-This directory contains the non-UI runtime source for a vendor-neutral Android
-phone companion and a Galaxy Watch8 Wear OS component. The visual interface is
-intentionally withheld until its design and behavior are stable. Project-wide
+This directory contains the source code for an Android phone application
+and a Galaxy Watch8 Wear OS application. Project-wide
 licensing and provenance are documented at the repository root.
 
 ## Modules
@@ -15,12 +14,9 @@ licensing and provenance are documented at the repository root.
   flavor uses Samsung Health Sensor SDK on Galaxy Watch8.
 
 The modules use the same application ID and must be signed with the same key
-for the Wear OS Data Layer. They intentionally declare no launcher activity;
-an application integrating this release must supply its own UI or service
-control entry point. The phone's `MobiWellbeingApplication` owns the headless
-`WellbeingController`, so incoming watch windows still reach the inference
-pipeline without a launcher activity. The future UI can obtain that controller
-from the application instance.
+for the Wear OS Data Layer. The phone application owns the
+`WellbeingController`, which routes incoming watch windows to the inference
+pipeline.
 
 ## Samsung SDK (not redistributed)
 
@@ -99,14 +95,3 @@ For debug deployment, copy the complete inference directory to the app's
 external files directory (normally
 `/sdcard/Android/data/org.mobihoc.wellbeing/files/inference`). No broad storage
 permission is required because this directory belongs to the app.
-
-The runtime deliberately does not fall back to synthetic predictions for a
-real watch window. `DemoInferenceEngine` is isolated for non-model integration
-tests and does not claim to execute a trained model.
-
-## UI boundary
-
-No Compose screen, launcher activity, visual asset, or Stitch export is part
-of this source release. A later UI can consume `PhoneRuntimeState`, call
-`WellbeingController`, and observe `WearRuntimeStore` without changing the
-sensor, training, inference, or transport implementations.
