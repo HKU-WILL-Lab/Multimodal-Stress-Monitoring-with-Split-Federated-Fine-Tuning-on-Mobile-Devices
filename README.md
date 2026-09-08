@@ -1,91 +1,204 @@
-# MobiWellbeing
+# Multimodal Stress Monitoring with Split Federated Fine-Tuning on Mobile Devices
 
-MobiWellbeing is a research prototype for proactive emotional-state estimation
-from wearable signals. It combines a smartwatch and phone application with a
-time-series-conditioned split federated learning (SFL) system for LoRA
-fine-tuning of Llama 3.2 1B.
+We present an end-to-end mobile system for proactive stress monitoring from
+wearable signals. The framework is supported by an extensible split federated
+learning system that enables on-device LoRA fine-tuning of large language
+models. By analyzing physiological data, the application distinguishes
+emotional states, summarizes recent trends, and provides brief, actionable
+suggestions.
 
-During training, a phone executes a frozen time-series encoder, a trainable
-modality-alignment module, and the first decoder block. A main server executes
-the remaining decoder blocks and language-model head, while a logically
-separate federated server coordinates rounds and aggregates client-side
-trainable state. Raw sensor windows remain on the phone; intermediate
-activations and gradients cross the split boundary.
+## Repository overview
 
-The demo application maps predicted valence and arousal to five user-facing
-emotional states, presents a recent trend and short assessment, and sends a
-watch vibration for negative states. It is a non-clinical research demo, not a
-medical device or diagnostic tool.
+This repository provides the training, inference, and application code for the
+system described in the paper:
 
-## Repository layout
+- **Training:** Training uses a split federated learning (SFL) framework, with client-side code implemented in C++ and server-side code implemented in Python using PyTorch. Clients and servers communicate via gRPC.
+- **Inference:** The C++ implementation connects the time-series encoder,
+  modality-alignment layer, and LLM for on-device multimodal inference using
+  ExecuTorch. Deployment scripts prepare the model assets for the phone.
+- **Applications:** Android and Wear OS code handles sensor collection,
+  watch-phone communication, and access to training and inference from the
+  phone application.
 
-| Path | Contents |
-| --- | --- |
-| `sfl_runtime/` | C++ mobile client, Python servers, protocol, exporters, and tests |
-| `apps/` | Headless phone/Watch8 runtime, sensing, transport, and shared logic |
-| `configs/` | Publication-safe configuration templates |
-| `docs/` | Reproduction and release documentation |
+The repository contains runtime code; the paper's visual UI is not included.
+Model weights, datasets, exported models, checkpoints, SDK binaries, and APKs
+are obtained or generated separately. External dependencies retain their own
+licenses; see [THIRD_PARTY_NOTICES.md](THIRD_PARTY_NOTICES.md).
 
-## What is included
+## Repository structure
 
-- Independently implemented SFL protocol, suffix service, federated
-  coordinator, serialization, metrics, and checkpoint logic.
-- Android arm64 C++ training path using external MobileFineTuner operators.
-- ExecuTorch encoder bridge and extensible sensor-to-LLM alignment interface.
-- Llama 3.2 1B split-training support with the first decoder block on-device.
-- Headless phone and Watch8 application modules, including training/inference
-  bridges, sensor transport, vibration alerts, and a synthetic sensor flavor.
-- Unit and integration tests that do not require private model or dataset files.
+The diagram groups the main source files by their role. Training and inference
+share some native utilities, while the phone application accesses each through
+a separate JNI interface.
 
-## What is not included
+```mermaid
+flowchart LR
+    subgraph Runtime["sfl_runtime/"]
+        direction TB
+        subgraph Training["Training"]
+            T["android/src/<br/>client_runner.cpp<br/>llama_prefix_block.cpp<br/>lora_state.cpp"]
+            S["python/sfl_clean/<br/>cli_suffix.py · llama_suffix.py<br/>cli_coordinator.py · coordinator.py<br/>aggregation.py"]
+            G["proto/sfl_clean.proto<br/>python/sfl_clean/grpc_services.py"]
+            C["python/sfl_clean/checkpoint.py"]
+            T <-->|gRPC| S
+            G -.-> T
+            G -.-> S
+            S --> C
+        end
+        subgraph Inference["Inference"]
+            P["scripts/stage_inference.ps1<br/>scripts/deploy_inference.ps1"]
+            I["android/src/local_inference.cpp"]
+            P -->|Deployment assets| I
+        end
+        C -->|Alignment checkpoint + separately merged/exported decoder| P
+        U["Shared native code: android/src/<br/>executorch_encoder.cpp<br/>alignment_projector.cpp"]
+        U -.-> T
+        U -.-> I
+    end
+    subgraph Apps["apps/"]
+        direction TB
+        A["phone/.../WellbeingController.kt"]
+        AT["phone/.../training/TrainingEngine.kt"]
+        AI["phone/.../inference/InferenceEngine.kt"]
+        AP["phone/.../transport/<br/>PhoneDataLayerService.kt<br/>WatchMessenger.kt"]
+        W["wear/.../capture/SensorCaptureService.kt<br/>wear/.../transport/WatchWindowSender.kt<br/>wear/.../transport/WearDataLayerService.kt"]
+        SH["shared/.../SensorModels.kt<br/>shared/.../AffectModels.kt"]
+        A --- AT
+        A --- AI
+        A --- AP
+        AP <-->|Wear OS Data Layer| W
+        SH -.-> A
+        SH -.-> W
+    end
+    T <-->|wellbeing_sfl_jni.cpp| AT
+    I <-->|local_inference_jni.cpp| AI
+```
 
-This source repository intentionally excludes the unfinished phone/watch UI,
-model weights, tokenizers,
-K-EmoCon data, exported `.pte` programs, `.sflsensor` files, checkpoints,
-Samsung SDK binaries, native libraries, APKs, credentials, device identifiers,
-and training logs. Obtain each external dependency or asset under its own
-terms and generate local runtime files using the documented scripts.
+The checkpoint arrow describes preparation for inference, not an automatic
+conversion: the staging script requires a separately merged and exported LLM
+decoder as well as the trained alignment checkpoint.
 
-The source code in this repository was developed for the MobiWellbeing
-research prototype. Third-party project source code is not vendored; only the
-standard Gradle Wrapper files are included for build bootstrapping. External
-dependencies remain subject to their respective licenses; see
-[THIRD_PARTY_NOTICES.md](THIRD_PARTY_NOTICES.md).
+The directory layout also includes build configuration, tests, and supporting
+documentation:
 
-In particular, Llama 3.2 materials remain subject to Meta's separate terms. Do
-not add them to the Git history.
+```text
+.
+├── apps/
+│   ├── phone/                 # Android application runtime
+│   ├── wear/                  # Wear OS sensing and communication
+│   ├── shared/                # Shared data types, logic, and tests
+│   ├── gradle/                # Gradle Wrapper
+│   ├── build.gradle.kts
+│   └── settings.gradle.kts
+├── sfl_runtime/
+│   ├── android/
+│   │   ├── src/               # Training, inference, and JNI implementations
+│   │   ├── include/sfl/       # C++ headers
+│   │   ├── inference/         # Standalone inference build configuration
+│   │   └── tests/             # Native tests
+│   ├── python/sfl_clean/      # Servers, aggregation, and asset preparation
+│   ├── proto/                 # Communication protocol
+│   ├── configs/               # Training and inference configuration examples
+│   ├── scripts/               # Build and deployment scripts
+│   ├── tests/                 # Python tests
+│   └── pyproject.toml         # Python package and dependencies
+├── configs/                   # Configuration guidance
+├── docs/                      # Reproducibility documentation
+├── README.md
+└── THIRD_PARTY_NOTICES.md
+```
 
-## Current verification status
+## Requirements
 
-- Python protocol/server tests: verified locally.
-- Native Android SFL training smoke path: verified on a connected phone with
-  locally supplied assets and servers.
-- Headless phone and synthetic-watch application builds: verified locally.
-- Full post-training phone inference: implementation is present, but a final
-  merged LoRA decoder exported for embedding input and the matching trained
-  alignment checkpoint are still required for an end-to-end model run.
-- Physical Samsung sensor capture: requires the separately obtained Samsung
-  Health Sensor SDK and the applicable Samsung approval/configuration.
+### Python services and tests
 
-See [sfl_runtime/README.md](sfl_runtime/README.md) and
-[apps/README.md](apps/README.md) for build details. The recorded checks are in
-[sfl_runtime/TEST_RECORD.md](sfl_runtime/TEST_RECORD.md).
+- Python 3.12-3.14
+- PyTorch 2.13.0
+- gRPC 1.83.0 and Protocol Buffers 7.35.1
+- A CUDA-capable host for model training
 
-## Relationship to related projects
+The pinned Python dependencies are declared in
+[`sfl_runtime/pyproject.toml`](sfl_runtime/pyproject.toml).
 
-The client-side LLM training engine builds on the separately obtained
-[MobileFineTuner](https://github.com/Edge-Intelligence-Lab/MobileFineTuner).
-[EdgeFlowerTune](https://github.com/Edge-Intelligence-Lab/EdgeFlowerTune)
-provides a broader Flower-based platform for heterogeneous federated LLM
-fine-tuning and could also support this class of application. This repository
-uses its own focused SFL protocol and does not require EdgeFlowerTune or Flower
-at build time or runtime.
+### Android and Wear OS applications
 
-## Usage rights
+- Android Studio with Android SDK 37
+- A JDK compatible with Android Gradle Plugin 9.2.0
+- Android NDK r29 for the native SFL runtime
+- An arm64 Android phone
+- A Wear OS watch, or the included synthetic-watch build variant
+- Samsung Health Sensor SDK 1.4.1 for physical Galaxy Watch8 sensing
 
-This repository is currently a public source snapshot, not an open-source
-release. No license is granted for the newly authored project source. Unless
-applicable law provides otherwise, permission is required before copying,
-modifying, redistributing, or incorporating it into another project. External
-dependencies, datasets, model materials, and generated artifacts remain under
-their own terms; see [THIRD_PARTY_NOTICES.md](THIRD_PARTY_NOTICES.md).
+Building the native SFL runtime additionally requires Visual Studio 2022 C++
+Build Tools, gRPC v1.83.0 source, a compatible ExecuTorch checkout, and
+MobileFineTuner at commit `b62d3b12a597e05489e6e8ef025527c613c94837`.
+
+## Quick checks
+
+These checks validate the public source without requiring model weights,
+K-EmoCon data, or the Samsung SDK.
+
+### Python tests
+
+From the repository root:
+
+```powershell
+cd sfl_runtime
+powershell -ExecutionPolicy Bypass -File scripts/build_host.ps1
+```
+
+The script creates `.venv`, installs the pinned package and development
+dependencies, generates the Python protobuf bindings, and runs the test suite.
+
+### Android and synthetic-watch builds
+
+```powershell
+cd apps
+.\gradlew.bat :shared:test
+.\gradlew.bat :phone:assembleDebug :wear:assembleDemoDebug
+```
+
+These commands validate the shared application logic and build the phone plus
+synthetic-watch variants. The public app modules intentionally omit the paper's
+visual UI and can be built without the native SFL libraries.
+
+## Running the full system
+
+Full SFL training requires separately obtained Llama 3.2 1B weights and
+tokenizer, a compatible time-series encoder exported to ExecuTorch, labeled
+sensor data such as K-EmoCon, the native Android toolchain, and reachable main
+and federated servers. Physical Watch8 sensing additionally requires the
+Samsung Health Sensor SDK.
+
+Detailed preparation, build, staging, and execution commands are provided in:
+
+- [SFL runtime documentation](sfl_runtime/README.md)
+- [Native Android build and deployment](sfl_runtime/android/README.md)
+- [Phone and Wear OS application modules](apps/README.md)
+- [Reproducibility notes](docs/REPRODUCIBILITY.md)
+
+## Current implementation status
+
+- Python protocol, server, aggregation, and dataset utilities are implemented
+  and covered by tests.
+- Native Android SFL training has been exercised on physical phones with
+  separately supplied runtime assets.
+- Phone and synthetic-watch application builds have been verified.
+- Physical Watch8 sensing requires the separately obtained Samsung SDK.
+- Full local post-training inference requires a compatible embedding-input
+  Llama decoder export and the matching trained alignment checkpoint.
+
+## Paper
+
+This repository accompanies the MobiHoc 2026 demo submission:
+
+> **Demo: Multimodal Stress Monitoring with Split Federated Fine-Tuning on
+> Mobile Devices**
+> Qi Guo, Qiyue Xu, Jiaxiang Geng, Bing Luo, and Xianhao Chen
+
+Citation information and the publication link will be added after publication.
+
+## Disclaimer
+
+This system is a research prototype. It is not a medical device or diagnostic
+tool and has not been audited for production deployment.
