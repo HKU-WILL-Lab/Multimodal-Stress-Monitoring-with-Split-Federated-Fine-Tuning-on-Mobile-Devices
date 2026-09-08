@@ -59,17 +59,6 @@ its `.aar` library are not included in this repository.
 - **Source:** [Samsung Health Sensor SDK](https://developer.samsung.com/health/sensor/overview.html)
 - **License:** Samsung Health Sensor SDK license agreement supplied with the SDK.
 
-### Other dependencies
-
-PyTorch, Transformers, PEFT, AndroidX, Kotlin libraries and build tools, and
-Google Play services for Wear OS are external dependencies and are not bundled
-in this repository. Dependency versions are specified in the Python and Gradle
-build configuration files.
-
-The Gradle Wrapper scripts and JAR included in `apps/` are provided by the
-[Gradle project](https://github.com/gradle/gradle) under the Apache License 2.0.
-The full Gradle distribution is downloaded by the Wrapper when needed.
-
 ### OpenTSLM
 
 The alignment implementation follows the OpenTSLM-SP architecture. The encoder
@@ -111,6 +100,17 @@ Its source code and pretrained weights are obtained separately.
   url     = {https://doi.org/10.1145/3803808}
 }
 ```
+
+### Other dependencies
+
+PyTorch, Transformers, PEFT, AndroidX, Kotlin libraries and build tools, and
+Google Play services for Wear OS are external dependencies and are not bundled
+in this repository. Dependency versions are specified in the Python and Gradle
+build configuration files.
+
+The Gradle Wrapper scripts and JAR included in `apps/` are provided by the
+[Gradle project](https://github.com/gradle/gradle) under the Apache License 2.0.
+The full Gradle distribution is downloaded by the Wrapper when needed.
 
 ## Model assets
 
