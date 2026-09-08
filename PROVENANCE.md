@@ -1,68 +1,49 @@
-# Provenance and clean-room boundary
+# Source provenance
 
-## Scope of this record
+## Scope
 
-This record applies to the source release rooted in this directory. It records
-the information boundary used to create the implementation; it is not a
-statement about separately obtained model weights, datasets, generated files,
-or locally built binaries.
+This record applies only to source files distributed in this repository. Model
+weights, tokenizers, datasets, exported programs, checkpoints, locally built
+binaries, and SDK packages are outside its scope and are not distributed.
 
-## Boundary
+## SFL implementation boundary
 
-The implementation was authored from a written functional specification
-without inspecting, copying, diffing, importing, adapting, or testing against
-source code from the surrounding legacy project or from unapproved related
-implementations. Those sources were not used as documentation, naming input,
-or a behavioral oracle.
+The SFL protocol, tensor serialization, suffix service, federated coordinator,
+client training control flow, metrics, and tests under `sfl_runtime/` were
+implemented from a functional specification and public papers. They do not
+copy, vendor, import, or require EdgeFlowerTune or Flower source code. The
+implementation uses a dedicated gRPC protocol and Python services.
 
-The written functional specification is a development input, not a release
-artifact. `scripts/release_manifest.py` excludes it from distributable source
-manifests so that the released tree contains only implementation and release
-materials.
+MobileFineTuner is an external build dependency for mobile-native LLM
+execution, backpropagation, and LoRA optimization. Development used a pristine
+official checkout pinned to commit
+`b62d3b12a597e05489e6e8ef025527c613c94837`. It is not vendored or modified in
+this repository.
 
-## Permitted inputs
+## Time-series integration
 
-The permitted inputs were limited to:
+The encoder bridge's `.pte` loading and tensor I/O contract was informed by a
+collaborator-provided CppTorchEncoder prototype. That prototype is not included.
+The exported encoder remains frozen during SFL training.
 
-1. The clean-room functional specification dated 2026-08-23.
-2. A pristine official
-   [MobileFineTuner](https://github.com/Edge-Intelligence-Lab/MobileFineTuner)
-   checkout pinned to commit
-   `b62d3b12a597e05489e6e8ef025527c613c94837`, licensed under Apache-2.0.
-3. Public, official documentation for Python, PyTorch, Transformers, PEFT,
-   Protocol Buffers, gRPC, CMake, and the Android NDK.
-4. The public papers [SplitLoRA, arXiv:2407.00952](https://arxiv.org/abs/2407.00952)
-   and [SplitFed, arXiv:2004.12088](https://arxiv.org/abs/2004.12088).
+The repository implements a general sensor-to-LLM alignment interface. Its
+included LayerNorm--Linear--GELU configuration follows the published
+OpenTSLM-SP architecture. The implementation in this repository is newly
+written; OpenTSLM source and model files are not included. The optional encoder
+export helper loads a separately obtained NormWear/OpenTSLM implementation
+supplied by the user at runtime.
 
-MobileFineTuner remains an external dependency. It is not vendored into this
-release. The separately authored patch targets only the pinned pristine commit
-and must be applied with the verification procedure supplied in `mft_patch/`.
+## Application source
 
-## Authorship and artifact policy
+The Android and Wear OS application source under `apps/` was written for this
+demo. Google Stitch was used as a visual design handoff only; no generated HTML
+or Stitch runtime is embedded. Samsung Health Sensor SDK is an optional,
+external binary dependency and is not included.
 
-All project source, protocol definitions, tests, configuration examples,
-scripts, and documentation in the release manifest are newly authored for
-this implementation unless a file explicitly says otherwise. Generated
-Protocol Buffer bindings and build products are not source artifacts and are
-not included.
+## Authorship requirement
 
-Model weights, tokenizer assets, datasets, raw samples, logs, metrics,
-checkpoints, secrets, and device identifiers are external or local runtime
-state. They must not be committed, packaged, or recorded in the release
-manifest. Checkpoints produced by the system are expected to contain only LoRA
-tensors and non-sensitive metadata, but remain excluded as runtime output.
-
-## Reproduction and audit
-
-A release audit should:
-
-1. obtain the MobileFineTuner checkout directly from its official upstream;
-2. verify that its checkout equals the pinned commit above;
-3. apply and verify the documented patch;
-4. obtain model and dataset assets separately under their applicable terms;
-5. generate Protocol Buffer bindings and build outputs locally; and
-6. run `python scripts/integrity_check.py --release` before packaging.
-
-The generated `RELEASE_MANIFEST.json` records the relative path, byte length,
-and SHA-256 digest of each distributable source file. It intentionally omits
-the manifest itself so that it can be regenerated deterministically.
+Before public release, every person or institution that owns copyright in
+contributed source must approve its public distribution. A future reuse license
+will require an additional licensing decision by the relevant copyright
+owners. This provenance record documents technical origin; it is not a
+substitute for that approval or for legal review by the authors' institutions.

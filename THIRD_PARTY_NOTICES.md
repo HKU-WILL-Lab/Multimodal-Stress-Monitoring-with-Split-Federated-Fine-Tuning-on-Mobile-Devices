@@ -1,46 +1,58 @@
 # Third-party notices
 
-This project is original clean-room work distributed under Apache License 2.0.
-It does not bundle the external software or runtime assets listed below.
+No reuse license is currently granted for the newly authored project source.
+External software and assets retain their own terms; their licenses do not
+license this project's original source by implication.
 
-## MobileFineTuner
+## External source/build dependencies
 
-The Android client depends on an externally obtained pristine checkout of
-[MobileFineTuner](https://github.com/Edge-Intelligence-Lab/MobileFineTuner) at
-commit `b62d3b12a597e05489e6e8ef025527c613c94837`.
+- **MobileFineTuner** — external, unmodified checkout pinned to
+  `b62d3b12a597e05489e6e8ef025527c613c94837`; Apache License 2.0; copyright
+  Mobile LLM Fine-Tuning Project Contributors.
+  <https://github.com/Edge-Intelligence-Lab/MobileFineTuner>
+- **ExecuTorch** — external source/build dependency; BSD 3-Clause license. If
+  ExecuTorch binaries are redistributed, reproduce its copyright, license
+  conditions, and disclaimer in the accompanying materials.
+  <https://github.com/pytorch/executorch>
+- **gRPC** — external source/build dependency; Apache License 2.0.
+  <https://github.com/grpc/grpc>
+- **Protocol Buffers** — external source/build dependency; BSD 3-Clause
+  license. <https://github.com/protocolbuffers/protobuf>
+- **PyTorch, Transformers, PEFT, AndroidX, Kotlin, Gradle, Google Play services
+  for Wear OS**, and their transitive dependencies retain their respective
+  licenses. Dependency declarations identify the requested versions; a binary
+  distributor must generate notices from the resolved dependency graph.
+- The included Gradle Wrapper scripts and JAR originate from the Gradle project
+  and retain the Gradle project's Apache-2.0 terms.
 
-MobileFineTuner is licensed under Apache License 2.0 and carries the notice:
+No EdgeFlowerTune or Flower source or binary is distributed or required.
+SplitLoRA and SplitFed are research references, not bundled software.
 
-> Copyright 2024 Mobile LLM Fine-Tuning Project Contributors
+## Encoder and alignment references
 
-The patch in `mft_patch/` is distributed separately from the upstream source.
-When applied, changed upstream files must retain applicable notices and carry
-prominent modification notices as required by Apache License 2.0. No upstream
-checkout or built binary is bundled. A textual patch can necessarily contain
-limited upstream context; that material remains covered by the upstream
-Apache-2.0 license and notices.
+The alignment configuration follows the published OpenTSLM-SP architecture.
+OpenTSLM source and pretrained files are not distributed. The optional export
+helper requires users to supply their own lawfully obtained implementation and
+checkpoint. The relevant NormWear component identifies its upstream source as
+Apache-2.0, but that does not automatically license other OpenTSLM materials.
 
-## Research references
+## Model assets
 
-The design cites, but does not copy code or text from:
+Llama 3.2 weights, tokenizer files, fine-tuned/merged weights, and model-derived
+artifacts are not distributed. They are governed by the Llama 3.2 Community
+License and Acceptable Use Policy.
+Any distributor of Llama materials or a product containing them must satisfy
+Meta's then-applicable attribution, notice, naming, and acceptable-use terms.
 
-- [SplitLoRA, arXiv:2407.00952](https://arxiv.org/abs/2407.00952)
-- [SplitFed, arXiv:2004.12088](https://arxiv.org/abs/2004.12088)
+## Data and vendor SDKs
 
-The papers and their associated artifacts remain subject to their respective
-authors' and publishers' terms.
+- K-EmoCon data and derived samples are not distributed. Users must obtain the
+  dataset from its official source and comply with its terms and human-subject
+  data restrictions.
+- Samsung Health Sensor SDK and its `.aar` are not distributed. Physical
+  Samsung sensor builds require a separately accepted Samsung SDK agreement,
+  supported hardware, and any required partner/package registration.
 
-## Runtime assets
-
-Gemma model weights and tokenizer files are external runtime assets. They are
-not covered by this project's Apache-2.0 license and must be obtained and used
-under the model provider's applicable terms.
-
-Input datasets are supplied by the user and are never redistributed by this
-project. Users are responsible for confirming that their data license and
-handling practices permit the intended use.
-
-Python, C++, Android, gRPC, Protocol Buffers, PyTorch, Transformers, PEFT, and
-other runtime/build dependencies retain their own licenses. The resolved lock
-files or dependency metadata used for a particular build are authoritative for
-the exact dependency set; this notice does not replace those licenses.
+Research references and repository links are listed in the component
+documentation. This notice is informational and does not replace the license
+files supplied by each dependency.

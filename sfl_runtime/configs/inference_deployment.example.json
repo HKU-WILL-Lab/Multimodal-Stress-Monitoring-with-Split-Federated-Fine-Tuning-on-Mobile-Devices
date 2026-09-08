@@ -1,0 +1,20 @@
+{
+  "model_pte": "assets/llama-3.2-1b-sensor-decoder.pte",
+  "tokenizer": "assets/tokenizer.json",
+  "encoder_pte": "assets/normwear_encoder_wesad.pte",
+  "embedding_dir": "assets/llama-embedding",
+  "alignment_checkpoint": "assets/prefix-round-0002",
+  "decoder_method": "forward",
+  "encoder_input_length": 240,
+  "encoder_output_width": 768,
+  "sensor_tokens": 162,
+  "max_new_tokens": 96,
+  "channels": [
+    {"kind": 1, "value_index": 0, "mean": 0.0, "std": 1.0},
+    {"kind": 1, "value_index": 1, "mean": 0.0, "std": 1.0},
+    {"kind": 1, "value_index": 2, "mean": 0.0, "std": 1.0},
+    {"kind": 2, "value_index": 0, "mean": 0.0, "std": 1.0},
+    {"kind": 3, "value_index": 0, "mean": 0.0, "std": 1.0},
+    {"kind": 4, "value_index": 0, "mean": 0.0, "std": 1.0}
+  ]
+}

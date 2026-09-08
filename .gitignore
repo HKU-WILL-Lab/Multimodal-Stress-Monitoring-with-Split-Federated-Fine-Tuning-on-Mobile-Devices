@@ -1,62 +1,28 @@
-# Python caches, environments, and tooling state
-__pycache__/
-*.py[cod]
-*$py.class
-.Python
+# Local environments and caches
+.python_deps/
 .venv/
 venv/
-env/
-.tox/
-.nox/
+__pycache__/
+*.py[cod]
 .pytest_cache/
 .mypy_cache/
 .ruff_cache/
-.hypothesis/
 .cache/
-.deps/
-.test-deps/
-_deps/
-deps/
-third_party/
-vendor/
-.eggs/
-*.egg-info/
-pip-wheel-metadata/
-.coverage
-.coverage.*
-coverage.xml
-htmlcov/
-*.egg
-*.whl
+.generated/
 
-# Generated Protocol Buffer and gRPC bindings
-proto/generated/
-generated/
-*_pb2.py
-*_pb2.pyi
-*_pb2_grpc.py
-*.pb.cc
-*.pb.h
-*.grpc.pb.cc
-*.grpc.pb.h
-*.desc
-
-# Native and Android build output
+# Native, Android, and Python build products
 build/
 out/
 dist/
-cmake-build-*/
+*.egg-info/
+.gradle/
+.cxx/
+.externalNativeBuild/
+local.properties
 CMakeFiles/
 CMakeCache.txt
 cmake_install.cmake
 compile_commands.json
-.cxx/
-.externalNativeBuild/
-.gradle/
-obj/
-local.properties
-*.ninja
-.ninja_*
 *.o
 *.obj
 *.a
@@ -68,14 +34,23 @@ local.properties
 *.aab
 *.aar
 *.jar
+!apps/gradle/wrapper/gradle-wrapper.jar
 
-# External model, tokenizer, and dataset assets
-model/
-models/
-tokenizer/
-tokenizers/
+# Models, datasets, exported programs, and training output
+runtime/
 data/
 datasets/
+models/
+model/
+assets/
+checkpoints/
+logs/
+metrics/
+runs/
+outputs/
+artifacts/
+*.pte
+*.sflsensor
 *.safetensors
 *.bin
 *.ckpt
@@ -88,47 +63,36 @@ datasets/
 *.npz
 *.arrow
 *.parquet
-tokenizer.json
-tokenizer.model
-tokenizer_config.json
-special_tokens_map.json
-
-# Runtime output
-checkpoints/
-logs/
-metrics/
-runs/
-artifacts/
 *.jsonl
-*.log
 
-# Device-local configuration and secrets
+# Generated protocol files
+*_pb2.py
+*_pb2.pyi
+*_pb2_grpc.py
+*.pb.cc
+*.pb.h
+*.grpc.pb.cc
+*.grpc.pb.h
+
+# Credentials and device-local configuration
 .env
 .env.*
 secrets/
 credentials/
-device*.json
-device*.yaml
-device*.yml
-device*.toml
-adb*.json
-*.serial
 *.jks
 *.keystore
 *.pem
 *.key
 *.p12
 *.pfx
+*.serial
 
-# Editors and operating systems
+# Archives and editor state
+*.zip
+*.tar
+*.tar.gz
+*.tgz
 .idea/
 .vscode/
 .DS_Store
 Thumbs.db
-
-# Generated release archives
-RELEASE_MANIFEST.json.tmp
-*.tar
-*.tar.gz
-*.tgz
-*.zip
