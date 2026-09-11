@@ -17,6 +17,11 @@ The application owns one controller shared with the launcher activity. Rotation
 or reopening the activity does not create a second native session. Runtime state
 is in memory; process termination does not automatically resume a training job.
 
+For training controlled from the computer, follow
+[Running the full system](../README.md#running-the-full-system). **Build & Deploy**
+sets phone paths/configuration and **Start Training** starts the phone session.
+The manual controls below are also available when operating the phone directly.
+
 ## Build and install
 
 From `apps/`, use a JDK supported by AGP and set `ANDROID_HOME` to your Android SDK:
@@ -41,10 +46,10 @@ Supply model assets and labeled records separately. Settings must point to:
 - the frozen NormWear `.pte` encoder;
 - the matching `.sflsensor` training split.
 
-The current native runtime requires **cut_layer=1**: the phone executes the
-embedding, alignment projector and decoder block 0; the GPU main server executes
-blocks 1–15 and the language-model head. The mobile export includes block-0 base
-weights. An embedding-only asset from the older cut=0 runtime is insufficient.
+The current native runtime supports **cut_layer=1..4**. A cut of N puts decoder
+blocks 0 through N−1 on the phone and blocks N through 15 on the main server.
+Export the matching prefix with `--cut-layer N`; **Build & Deploy** does this
+automatically. The phone also runs the embedding and alignment projector.
 
 The validated 30-second encoder uses input `[1, 6, 240]` and emits `[1, 162, 768]`.
 Set Encoder Input Length to 240 only when using that matching export and dataset.

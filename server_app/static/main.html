@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="en" style=""><head><link rel="stylesheet" href="main.css"><title>MobiWellbeing Server</title><link rel="stylesheet" href="app.css"></head><body class="bg-surface font-body-md text-on-surface min-h-screen flex flex-col" data-role="main"><svg class="inline-defs-container" aria-hidden="true" style="position:absolute;width:0;height:0;overflow:hidden"></svg><meta charset="utf-8"><meta content="width=device-width, initial-scale=1.0" name="viewport">
+
+<link rel="stylesheet" href="vendor/inter.css"><link rel="stylesheet" href="vendor/symbols.css"><header class="fixed top-0 left-0 right-0 w-full z-50 bg-surface/80 backdrop-blur-xl shadow-[0_1px_8px_rgba(0,0,0,0.04)]"><div class="h-16 w-full px-container-margin flex items-center justify-between"><div class="flex items-center gap-stack-md"><div class="w-9 h-9 rounded-lg bg-primary flex items-center justify-center shadow-[0_10px_30px_rgba(0,0,0,0.08)]"><span class="material-symbols-outlined text-on-primary text-[20px]">psychology</span></div><div class="flex items-center gap-stack-sm"><span class="font-headline-md text-headline-md text-on-surface tracking-tight">Cognitive Sanctuary</span><span class="inline-flex items-center px-2 py-0.5 rounded-full font-label-sm text-label-sm bg-surface-container-high text-on-surface-variant border border-outline-variant/30">Edge Core Engine</span></div></div><div class="flex items-center justify-center"><nav class="flex items-center bg-surface-container-low p-1 rounded-xl shadow-[0_1px_8px_rgba(0,0,0,0.04)] gap-1" data-active-classes="bg-primary-container text-on-primary font-label-md shadow-[0_10px_30px_rgba(0,0,0,0.08)]"><a aria-current="page" class="px-4 py-1.5 rounded-lg transition-all bg-primary-container text-on-primary font-label-md shadow-[0_10px_30px_rgba(0,0,0,0.08)]" data-path="main-server-training" href="main.html">Main Server (Training)</a><a class="px-4 py-1.5 rounded-lg font-label-md text-label-md text-on-surface-variant hover:bg-surface-container-high hover:text-on-surface transition-all" data-path="federated-server-parameter-aggregation" href="federated.html">Federated Server (Parameter Aggregation)</a></nav></div><div class="flex items-center gap-stack-md"><div class="flex items-center gap-2 px-3 py-1.5 rounded-full bg-surface-container border border-outline-variant/20"><span class="relative flex h-2 w-2"><span class="absolute inline-flex h-full w-full rounded-full bg-secondary opacity-75"></span><span class="relative inline-flex rounded-full h-2 w-2 bg-secondary"></span></span><span class="font-label-sm text-label-sm text-on-surface" id="node-state">Stopped</span></div><div class="w-8 h-8 rounded-full bg-primary flex items-center justify-center shadow-[0_10px_30px_rgba(0,0,0,0.08)]"><span class="material-symbols-outlined text-on-primary text-[18px]">person</span></div></div></div></header><main class="w-full pt-16 bg-surface min-h-[calc(100vh-64px)] flex-1 px-container-margin py-stack-lg"><p id="app-error" role="alert" hidden=""></p><div class="flex flex-col w-full gap-stack-lg max-w-7xl mx-auto">
+<!-- Top Level Header & Operational Status -->
+<div class="flex flex-col md:flex-row md:items-end justify-between gap-stack-md">
+<div class="flex flex-col gap-stack-sm">
+
+<h1 class="font-headline-xl text-headline-xl text-on-surface tracking-tight">Main Server</h1>
+
+</div>
+<!-- Action Controls -->
+
+<div class="app-controls"><span id="run-name">Loading configuration…</span><button id="start-service">Start Main Server</button><button id="stop-service">Stop Server</button><button id="quit-app">Exit App</button></div></div>
+<section class="deployment-card">
+<div class="deployment-inputs"><strong>New Training</strong><label>Cutting Layer <select id="deploy-cut"><option>1</option><option>2</option><option>3</option><option>4</option></select></label><label>Steps <input id="deploy-steps" type="number" min="1" max="100000" value="5"></label><label>ADB Phone <select id="deploy-device" aria-label="Authorized phone"></select></label><button id="refresh-devices">Refresh Phones</button><button id="deploy-phone">Build &amp; Deploy</button><button id="train-phone" disabled>Start Training</button></div>
+<p id="deployment-message">Loading deployment tools…</p><details><summary>Build &amp; deployment logs</summary><pre id="deployment-logs"></pre></details></section>
+<!-- Primary Metric Grid (4 Cards) -->
+<div class="grid grid-cols-1 sm:grid-cols-2 gap-gutter lg:grid-cols-3 grid-cols-3">
+<!-- Card 1: Connected Devices -->
+<div class="bg-surface-container-lowest p-stack-lg rounded-xl shadow-sm flex flex-col justify-between">
+<div class="flex items-start justify-between">
+<div class="flex flex-col gap-1">
+<span class="font-label-sm text-label-sm text-on-surface-variant uppercase tracking-wider" id="clients-label">Clients This Session</span>
+<div class="flex items-baseline gap-base">
+<span class="font-headline-xl text-headline-xl text-on-surface" id="clients">0</span>
+<span class="font-label-sm text-label-sm text-secondary font-medium" id="clients-kind">observed</span>
+</div>
+</div>
+<div class="w-10 h-10 rounded-lg bg-surface-container-low flex items-center justify-center text-primary">
+<span class="material-symbols-outlined">smartphone</span>
+</div>
+</div>
+<div class="mt-4 pt-3 flex items-center justify-between font-label-sm text-label-sm bg-surface-container-low/60 rounded-lg px-3 py-2" id="client-summary">Waiting for mobile training</div>
+</div>
+<!-- Card 2: Training Step Progress -->
+<div class="bg-surface-container-lowest p-stack-lg rounded-xl shadow-sm flex flex-col justify-between">
+<div class="flex items-start justify-between">
+<div class="flex flex-col gap-1">
+<span class="font-label-sm text-label-sm text-on-surface-variant uppercase tracking-wider">Current Training Step</span>
+<div class="flex items-baseline gap-base">
+<span class="font-headline-lg text-headline-lg text-on-surface" id="step">0</span>
+<span class="font-label-md text-label-md text-on-surface-variant" id="total">/ —</span>
+</div>
+</div>
+<div class="w-10 h-10 rounded-lg bg-surface-container-low flex items-center justify-center text-primary">
+<span class="material-symbols-outlined">pace</span>
+</div>
+</div>
+<div class="mt-4 flex flex-col gap-1.5">
+<div class="w-full bg-surface-container-high h-2 rounded-full overflow-hidden">
+<div class="bg-primary-container h-full rounded-full transition-all duration-500" style="width: 0%;" id="step-bar"></div>
+</div>
+<div class="flex justify-between items-center font-label-sm text-label-sm text-on-surface-variant">
+<span class="" id="progress">0% progress</span>
+<span class="" id="remaining"></span>
+</div>
+</div>
+</div>
+<!-- Card 3: PPL Convergence -->
+<div class="bg-surface-container-lowest p-stack-lg rounded-xl shadow-sm flex flex-col justify-between"><div class="flex items-start justify-between w-full"><span class="font-label-sm text-label-sm text-on-surface-variant uppercase tracking-wider">Current PPL (Perplexity)</span><div class="w-10 h-10 rounded-lg bg-surface-container-low flex items-center justify-center text-primary shrink-0"><span class="material-symbols-outlined">auto_graph</span></div></div><div class="flex flex-col items-center justify-center my-auto py-2 gap-2 text-center"><span class="font-headline-xl text-headline-xl text-primary font-bold tracking-tight text-[36px]" id="ppl">—</span><span class="inline-flex items-center px-2.5 py-0.5 rounded-full font-label-sm text-label-sm bg-secondary-container text-on-secondary-container font-medium" id="ppl-delta">Waiting for first step</span></div><div class="flex items-center justify-between font-label-sm text-label-sm text-on-surface-variant pt-2 border-t border-outline-variant/10"><span class="flex items-center gap-1.5 text-on-surface" id="ppl-caption">Measured from training loss</span><span class="text-secondary font-medium" id="ppl-target"></span></div></div>
+<!-- Card 4: System State Pools -->
+
+</div>
+<!-- Model & Dataset Configuration Bar -->
+<div class="bg-surface-container-lowest rounded-xl p-stack-md shadow-sm flex flex-col lg:flex-row items-stretch lg:items-center justify-between gap-stack-md">
+<div class="flex flex-wrap items-center gap-stack-md">
+<!-- Target Model selector -->
+<div class="flex items-center gap-2 bg-surface-container-low px-3 py-2 rounded-lg">
+<span class="material-symbols-outlined text-on-surface-variant text-[18px]">neurology</span>
+<div class="flex flex-col">
+<span class="font-label-sm text-[10px] text-on-surface-variant uppercase tracking-wider">Original Model / Backbone</span>
+<span class="font-label-md text-label-md text-on-surface font-semibold" id="model">—</span>
+</div>
+</div>
+<!-- Dataset selector -->
+<div class="flex items-center gap-2 bg-surface-container-low px-3 py-2 rounded-lg">
+<span class="material-symbols-outlined text-on-surface-variant text-[18px]">dataset</span>
+<div class="flex flex-col">
+<span class="font-label-sm text-[10px] text-on-surface-variant uppercase tracking-wider">Data Source</span>
+<span class="font-label-md text-label-md text-on-surface font-semibold" id="dataset">Mobile sensor encoder activations</span>
+</div>
+</div>
+</div>
+<!-- Parameter Badges -->
+<div class="flex flex-wrap items-center gap-2">
+<span class="px-2.5 py-1 rounded-md bg-surface-container font-label-sm text-label-sm text-on-surface">Batch Size: <strong id="batch">—</strong></span>
+<span class="px-2.5 py-1 rounded-md bg-surface-container font-label-sm text-label-sm text-on-surface">LR: <strong id="lr">—</strong></span>
+<span class="px-2.5 py-1 rounded-md bg-surface-container font-label-sm text-label-sm text-on-surface">Optimizer: <strong>AdamW</strong></span>
+<span class="px-2.5 py-1 rounded-md bg-surface-container font-label-sm text-label-sm text-on-surface">Text Tokens: <strong id="tokens">—</strong></span>
+<span class="px-2.5 py-1 rounded-md bg-primary-fixed text-on-primary-fixed font-label-sm text-label-sm flex items-center gap-1 font-semibold" id="device">Device: —</span>
+</div>
+</div>
+<!-- Primary Interactive Visualization: Perplexity Convergence -->
+<div class="bg-surface-container-lowest p-stack-lg rounded-xl shadow-sm flex flex-col gap-stack-md relative">
+<div class="flex flex-col sm:flex-row sm:items-center justify-between gap-stack-sm">
+<div class="flex flex-col">
+<div class="flex items-center gap-2">
+<h2 class="font-headline-md text-headline-md text-on-surface">Perplexity (PPL) vs. Training Steps</h2>
+<span class="inline-flex items-center px-2 py-0.5 rounded-full font-label-sm text-label-sm bg-secondary-container text-on-secondary-container" id="chart-state">Waiting</span>
+</div>
+
+</div>
+<!-- Range Filter Buttons -->
+<div class="flex items-center bg-surface-container-low p-1 rounded-lg"><select id="chart-client" aria-label="Chart client"></select></div>
+</div>
+<!-- Chart Container with SVG Rendering -->
+<div class="ppl-shell">
+<!-- Background Grid lines -->
+
+<!-- Target PPL Guideline (Value: 15.0) -->
+
+<!-- Main SVG Chart Plot -->
+<svg class="w-full h-full overflow-visible z-0" preserveAspectRatio="none" viewBox="0 0 1000 300" id="ppl-chart"></svg>
+<!-- Step 1,420 Active Tooltip Badge -->
+
+<!-- X-Axis Labels -->
+<div class="flex justify-between items-center font-label-sm text-label-sm text-on-surface-variant pt-2 border-t border-outline-variant/20 z-10 pb-1" id="x-axis"></div>
+</div>
+</div>
+<!-- Training System Logs & Step Telemetry Terminal -->
+<div class="bg-surface-container-lowest rounded-xl shadow-sm overflow-hidden flex flex-col">
+<!-- Terminal Header -->
+<div class="p-stack-md bg-surface-container-low flex flex-wrap items-center justify-between gap-stack-md border-b border-outline-variant/10">
+<div class="flex items-center gap-stack-md">
+<div class="flex items-center gap-2">
+<span class="w-2.5 h-2.5 rounded-full bg-secondary"></span>
+<h3 class="font-headline-md text-headline-md text-on-surface">Main Server System Logs &amp; Step Telemetry</h3>
+</div>
+<span class="font-label-sm text-label-sm text-on-surface-variant" id="rpc-bind">gRPC: —</span>
+</div>
+<div class="flex items-center gap-2">
+<div class="flex items-center bg-surface-container p-0.5 rounded-lg">
+<button class="px-2.5 py-1 rounded font-label-sm text-label-sm bg-surface-container-lowest text-on-surface font-medium shadow-sm" data-log-filter="all">All Logs</button>
+<button class="px-2.5 py-1 rounded font-label-sm text-label-sm text-on-surface-variant hover:text-on-surface" data-log-filter="steps">Step Events</button>
+<button class="px-2.5 py-1 rounded font-label-sm text-label-sm text-on-surface-variant hover:text-on-surface" data-log-filter="loss">Forward Loss</button>
+</div>
+<button class="flex items-center gap-1 px-3 py-1.5 rounded-lg font-label-sm text-label-sm bg-surface-container-high text-on-surface hover:bg-surface-container transition-colors" id="autoScrollBtn" title="Automatically follow new log entries. Turn off to read earlier entries while logs continue updating.">
+<span class="material-symbols-outlined text-[16px] text-secondary">check_circle</span>
+          Auto-Scroll: ON
+        </button>
+<button class="flex items-center gap-1 px-3 py-1.5 rounded-lg font-label-sm text-label-sm bg-surface-container hover:bg-surface-container-high text-on-surface transition-colors" id="downloadLogBtn">
+<span class="material-symbols-outlined text-[16px]">download</span>
+          Export
+        </button>
+</div>
+</div>
+<!-- Terminal Content Area -->
+<div class="p-stack-md font-mono text-[13px] leading-relaxed max-h-72 overflow-y-auto space-y-1 bg-surface-container-lowest text-on-surface-variant select-text" id="logTerminal">Waiting for service startup</div>
+</div>
+</div>
+</main><footer class="w-full bg-surface-container-low py-stack-md mt-auto"><div class="app-footer"><span>MobiWellbeing · Split Federated Training</span><span id="footer-state">Local application</span></div></footer>
+
+<script src="app.js"></script></body></html>

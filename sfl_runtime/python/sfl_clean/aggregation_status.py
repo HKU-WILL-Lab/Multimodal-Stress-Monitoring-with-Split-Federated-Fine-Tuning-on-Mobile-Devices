@@ -11,6 +11,7 @@ class AggregationStatus:
         self._lock = Lock()
         self._events = deque(maxlen=64)
         self._state = {}
+        self._clients = {}
         self.publish('IDLE', 1, 0, quorum)
 
     def publish(self, phase: str, round_number: int, received: int, quorum: int):
@@ -21,7 +22,13 @@ class AggregationStatus:
 
     def snapshot(self):
         with self._lock:
-            return {**self._state, 'events': list(self._events)}
+            return {**self._state, 'events': list(self._events),
+                    'clients': [dict(value) for value in self._clients.values()]}
+
+    def client(self, client_id, **fields):
+        """Record successful protocol activity, not an inferred network connection."""
+        with self._lock:
+            self._clients.setdefault(client_id, {'id': client_id}).update(fields, lastSeen=time())
 
 
 def serve_status(status: AggregationStatus, bind: str, run_id: str):

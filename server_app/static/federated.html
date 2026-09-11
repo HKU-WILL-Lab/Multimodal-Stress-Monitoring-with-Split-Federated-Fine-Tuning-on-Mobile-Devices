@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="en" style=""><head><meta charset="utf-8"><meta content="width=device-width, initial-scale=1.0" name="viewport">
+
+<link rel="stylesheet" href="vendor/inter.css"><link rel="stylesheet" href="vendor/symbols.css"><link rel="stylesheet" href="federated.css"><title>MobiWellbeing Server</title><link rel="stylesheet" href="app.css"></head><body class="bg-surface font-body-md text-on-surface min-h-screen flex flex-col" data-role="federated"><header class="fixed top-0 left-0 right-0 w-full z-50 bg-surface/80 backdrop-blur-xl shadow-[0_1px_8px_rgba(0,0,0,0.04)]"><div class="h-16 w-full px-container-margin flex items-center justify-between"><div class="flex items-center gap-stack-md"><div class="w-9 h-9 rounded-lg bg-primary flex items-center justify-center shadow-[0_10px_30px_rgba(0,0,0,0.08)]"><span class="material-symbols-outlined text-on-primary text-[20px]">psychology</span></div><div class="flex items-center gap-stack-sm"><span class="font-headline-md text-headline-md text-on-surface tracking-tight">Cognitive Sanctuary</span><span class="inline-flex items-center px-2 py-0.5 rounded-full font-label-sm text-label-sm bg-surface-container-high text-on-surface-variant border border-outline-variant/30">Edge Core Engine</span></div></div><div class="flex items-center justify-center"><nav class="flex items-center bg-surface-container-low p-1 rounded-xl shadow-[0_1px_8px_rgba(0,0,0,0.04)] gap-1" data-active-classes="bg-primary-container text-on-primary font-label-md shadow-[0_10px_30px_rgba(0,0,0,0.08)]"><a class="px-4 py-1.5 rounded-lg font-label-md text-label-md text-on-surface-variant hover:bg-surface-container-high hover:text-on-surface transition-all" data-path="main-server-training" href="main.html">Main Server (Training)</a><a aria-current="page" class="px-4 py-1.5 rounded-lg transition-all bg-primary-container text-on-primary font-label-md shadow-[0_10px_30px_rgba(0,0,0,0.08)]" data-path="federated-server-parameter-aggregation" href="federated.html">Federated Server (Parameter Aggregation)</a></nav></div><div class="flex items-center gap-stack-md"><div class="flex items-center gap-2 px-3 py-1.5 rounded-full bg-surface-container border border-outline-variant/20"><span class="relative flex h-2 w-2"><span class="absolute inline-flex h-full w-full rounded-full bg-secondary opacity-75"></span><span class="relative inline-flex rounded-full h-2 w-2 bg-secondary"></span></span><span class="font-label-sm text-label-sm text-on-surface" id="node-state">Stopped</span></div><div class="w-8 h-8 rounded-full bg-primary flex items-center justify-center shadow-[0_10px_30px_rgba(0,0,0,0.08)]"><span class="material-symbols-outlined text-on-primary text-[18px]">person</span></div></div></div></header><main class="w-full pt-16 bg-surface min-h-[calc(100vh-64px)] flex-1 px-container-margin py-stack-lg"><p id="app-error" role="alert" hidden=""></p><div class="flex flex-col w-full">
+<!-- Top Command & Lifecycle Header -->
+<section class="flex flex-col gap-base mb-stack-lg">
+<div class="flex flex-wrap items-center justify-between gap-gutter">
+<div class="flex flex-col gap-stack-sm">
+
+<h1 class="font-headline-xl text-headline-xl text-on-surface tracking-tight">Federated Server</h1>
+
+</div>
+
+<div class="app-controls"><span id="run-name">Loading configuration…</span><button id="start-service">Start Federated Server</button><button id="stop-service">Stop Server</button><button id="quit-app">Exit App</button></div></div>
+</section>
+<!-- Lifecycle Pipeline Card -->
+<section class="mb-stack-lg">
+<div class="p-gutter rounded-xl bg-surface-container-lowest shadow-md">
+<div class="flex flex-wrap items-center justify-between gap-stack-md mb-stack-md">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-primary text-[20px]">account_tree</span>
+<h2 class="font-headline-md text-headline-md text-on-surface">Aggregation Lifecycle Pipeline</h2>
+</div>
+<span class="font-label-sm text-label-sm text-on-surface-variant">Global FedAvg Tensor Aggregation Routine</span>
+</div>
+<!-- Linear Stepper Track -->
+<div class="grid grid-cols-1 md:grid-cols-3 gap-stack-sm"><div class="app-stage" id="stage-0"><span>Stage 01</span><strong>Waiting for upload</strong><small id="stage-detail-0">Waiting</small></div><div class="app-stage" id="stage-1"><span>Stage 02</span><strong>Aggregating</strong><small id="stage-detail-1">Waiting</small></div><div class="app-stage" id="stage-2"><span>Stage 03</span><strong>Global weights ready</strong><small id="stage-detail-2">Waiting</small></div></div>
+<!-- Status State Pools Matrix -->
+
+</div>
+</section>
+<!-- Key Metrics Bento Grid -->
+<section class="grid grid-cols-1 md:grid-cols-2 gap-gutter mb-stack-lg">
+<!-- Metric 1: Connected Phones -->
+<div class="p-gutter rounded-xl bg-surface-container-lowest shadow-md flex flex-col justify-between">
+<div class="flex items-center justify-between mb-stack-sm">
+<span class="font-label-sm text-label-sm text-on-surface-variant uppercase tracking-wider" id="clients-label">Clients This Session</span>
+<div class="w-8 h-8 rounded-lg bg-surface-container flex items-center justify-center">
+<span class="material-symbols-outlined text-primary text-[18px]">smartphone</span>
+</div>
+</div>
+<div class="flex items-baseline gap-2 mb-2">
+<span class="font-headline-xl text-headline-xl text-on-surface" id="clients">0</span>
+<span class="font-label-md text-label-md text-on-surface-variant" id="clients-kind">registered</span>
+</div>
+<div class="flex items-center justify-between pt-2">
+<div class="flex items-center gap-1.5">
+<span class="w-2 h-2 rounded-full bg-secondary"></span>
+<span class="font-label-sm text-label-sm text-on-surface-variant" id="uploaded">0 uploaded</span>
+</div>
+<div class="flex items-center gap-1.5">
+<span class="w-2 h-2 rounded-full bg-tertiary-container"></span>
+<span class="font-label-sm text-label-sm text-on-surface-variant" id="standby">0 awaiting upload</span>
+</div>
+</div>
+</div>
+<!-- Metric 2: Parameter Transmission -->
+
+<!-- Metric 3: FedAvg Round -->
+<div class="p-gutter rounded-xl bg-surface-container-lowest shadow-md flex flex-col justify-between">
+<div class="flex items-center justify-between mb-stack-sm">
+<span class="font-label-sm text-label-sm text-on-surface-variant uppercase tracking-wider">Current FedAvg Round</span>
+<div class="w-8 h-8 rounded-lg bg-surface-container flex items-center justify-center">
+<span class="material-symbols-outlined text-primary text-[18px]">published_with_changes</span>
+</div>
+</div>
+<div class="flex items-baseline gap-2 mb-1">
+<span class="font-headline-xl text-headline-xl text-on-surface" id="round">1</span>
+<span class="font-body-lg text-body-lg text-on-surface-variant" id="round-total">/ —</span>
+</div>
+<!-- SVG Minimalist Radial Gauge -->
+<div class="flex items-center justify-between pt-1">
+<div class="flex items-center gap-2">
+<svg class="w-7 h-7 -rotate-90" viewBox="0 0 36 36">
+<path class="text-surface-container" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" fill="none" stroke="currentColor" stroke-width="3.5"></path>
+<path class="text-primary" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" fill="none" stroke="currentColor" stroke-dasharray="0, 100" stroke-linecap="round" stroke-width="3.5" id="round-ring"></path>
+</svg>
+<span class="font-label-sm text-label-sm text-on-surface" id="round-progress">0% complete</span>
+</div>
+<span class="font-label-sm text-label-sm text-on-surface-variant" id="phase">Idle</span>
+</div>
+</div>
+<!-- Metric 4: Weight Drift -->
+
+</section>
+<!-- Main Content Grid: Client Table & Real-time Logs -->
+<section class="grid grid-cols-1 xl:grid-cols-12 gap-gutter mb-stack-lg">
+<!-- Client Parameter Transmission Breakdown (7 cols) -->
+<div class="xl:col-span-7 flex flex-col rounded-xl bg-surface-container-lowest shadow-md p-gutter">
+<div class="flex flex-wrap items-center justify-between gap-stack-sm mb-stack-md">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-primary text-[20px]">devices</span>
+<h2 class="font-headline-md text-headline-md text-on-surface">Client Parameter Transmission</h2>
+</div>
+<div class="flex items-center gap-2">
+<span class="font-label-sm text-label-sm text-on-surface-variant" id="batch-round">Round: 1</span>
+<button class="px-2.5 py-1 rounded-lg bg-surface-container hover:bg-surface-container-high text-on-surface font-label-sm text-label-sm flex items-center gap-1 transition-all" id="refreshClientsBtn">
+<span class="material-symbols-outlined text-[14px]">refresh</span>
+            Refresh List
+          </button>
+</div>
+</div>
+<!-- Responsive Table View -->
+<div class="w-full overflow-x-auto">
+<table class="w-full text-left">
+<thead>
+<tr class="bg-surface-container-low text-on-surface-variant font-label-sm text-label-sm">
+<th class="py-2.5 px-3 rounded-l-lg font-semibold">Client ID</th>
+<th class="py-2.5 px-3 font-semibold">Last Activity</th>
+<th class="py-2.5 px-3 font-semibold">Samples</th>
+<th class="py-2.5 px-3 font-semibold">Tensor Size</th>
+<th class="py-2.5 px-3 font-semibold">Round</th>
+<th class="py-2.5 px-3 rounded-r-lg font-semibold text-left">Status</th>
+</tr>
+</thead>
+<tbody class="divide-y-0 text-on-surface font-body-md text-body-md"></tbody>
+</table>
+</div>
+<div class="mt-auto pt-stack-md flex items-center justify-between text-on-surface-variant font-label-sm text-label-sm">
+<span class="" id="table-count">No clients yet</span>
+
+</div>
+</div>
+<!-- Parameter Aggregation System Logs (5 cols) -->
+<div class="xl:col-span-5 flex flex-col rounded-xl bg-inverse-surface text-inverse-on-surface shadow-md p-gutter">
+<!-- Terminal Header -->
+<div class="flex items-center justify-between pb-stack-sm mb-stack-sm">
+<div class="flex items-center gap-2">
+<span class="relative flex h-2.5 w-2.5">
+<span class="absolute inline-flex h-full w-full rounded-full bg-secondary-container opacity-75"></span>
+<span class="relative inline-flex rounded-full h-2.5 w-2.5 bg-secondary-container"></span>
+</span>
+<h3 class="font-headline-md text-headline-md text-inverse-on-surface tracking-tight">Aggregation Logs</h3>
+</div>
+<div class="flex items-center gap-1">
+<button class="p-1 rounded hover:bg-surface-container-high/20 text-inverse-on-surface/80 transition-colors" id="pauseLogBtn" title="Pause Log Feed">
+<span class="material-symbols-outlined text-[16px]">pause</span>
+</button>
+<button class="p-1 rounded hover:bg-surface-container-high/20 text-inverse-on-surface/80 transition-colors" id="clearLogBtn" title="Clear Console">
+<span class="material-symbols-outlined text-[16px]">block</span>
+</button>
+<button class="p-1 rounded hover:bg-surface-container-high/20 text-inverse-on-surface/80 transition-colors" id="downloadLogBtn" title="Download Export">
+<span class="material-symbols-outlined text-[16px]">download</span>
+</button>
+</div>
+</div>
+<!-- Log Terminal Body -->
+<div class="flex-1 min-h-[300px] flex flex-col gap-2 font-mono text-[12px] leading-5 text-inverse-on-surface/90 overflow-y-auto pr-1" id="logStreamContainer"></div>
+<!-- Log Terminal Footer Status -->
+<div class="mt-stack-sm pt-2 flex items-center justify-between text-inverse-on-surface/60 font-label-sm text-label-sm">
+<span class="flex items-center gap-1">
+<span class="w-1.5 h-1.5 rounded-full bg-secondary-fixed"></span>
+          Streaming stdout/stderr
+        </span>
+<span class="" id="transport">Local status endpoint</span>
+</div>
+</div>
+</section>
+</div>
+</main><footer class="w-full bg-surface-container-low py-stack-md mt-auto"><div class="app-footer"><span>MobiWellbeing · Split Federated Training</span><span id="footer-state">Local application</span></div></footer>
+
+<script src="app.js"></script></body></html>

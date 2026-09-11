@@ -98,7 +98,7 @@ ops::TensorPtr required(
     const char* name, const std::vector<std::int64_t>& shape) {
     const auto found = tensors.find(name);
     if (found == tensors.end() || found->second->shape() != shape) {
-        throw std::invalid_argument(std::string("missing or incompatible Llama block-0 weight: ") + name);
+        throw std::invalid_argument(std::string("missing or incompatible Llama block weight: ") + name);
     }
     return found->second;
 }
@@ -146,13 +146,13 @@ ops::TensorPtr causal_padding_mask(const ops::TensorPtr& attention_mask) {
     return mask;
 }
 
-void append_named(std::vector<NamedLoraParameter>& output, const char* module,
+void append_named(std::vector<NamedLoraParameter>& output, const std::string& module,
                   const std::unique_ptr<ops::LoRALinear>& linear) {
     if (!linear || linear->slices().size() != 1) {
         throw std::logic_error("Llama prefix LoRA module is not initialized");
     }
-    output.push_back({std::string("layers.0.") + module + ".lora_A", linear->slices()[0].A});
-    output.push_back({std::string("layers.0.") + module + ".lora_B", linear->slices()[0].B});
+    output.push_back({module + ".lora_A", linear->slices()[0].A});
+    output.push_back({module + ".lora_B", linear->slices()[0].B});
 }
 
 }  // namespace
@@ -160,11 +160,12 @@ void append_named(std::vector<NamedLoraParameter>& output, const char* module,
 LlamaPrefixBlock::LlamaPrefixBlock(const std::string& model_dir,
                                    std::uint32_t lora_rank,
                                    float lora_alpha,
-                                   std::uint64_t seed) {
+                                   std::uint64_t seed, std::uint32_t layer_index) : layer_index_(layer_index) {
     if (lora_rank == 0 || !std::isfinite(lora_alpha) || lora_alpha <= 0.0F) {
         throw std::invalid_argument("Llama prefix LoRA configuration is invalid");
     }
-    const std::string prefix = "model.layers.0.";
+    if (layer_index >= 4) throw std::invalid_argument("mobile layer index must be below 4");
+    const std::string prefix = "model.layers." + std::to_string(layer_index) + ".";
     std::unordered_map<std::string, std::string> mapping = {
         {"input_norm", prefix + "input_layernorm.weight"},
         {"post_attention_norm", prefix + "post_attention_layernorm.weight"},
@@ -198,7 +199,7 @@ LlamaPrefixBlock::LlamaPrefixBlock(const std::string& model_dir,
     gate_ = std::make_unique<ops::LoRALinear>(weights_.gate);
     up_ = std::make_unique<ops::LoRALinear>(weights_.up);
     down_ = std::make_unique<ops::LoRALinear>(weights_.down);
-    std::mt19937 generator(static_cast<std::uint32_t>(seed));
+    std::mt19937 generator(static_cast<std::uint32_t>(seed + layer_index));
     const float scale = lora_alpha / static_cast<float>(lora_rank);
     attach(*q_, kHidden, kHidden, lora_rank, scale, generator, "layers_0_q_proj");
     attach(*k_, kHidden, kKvHeads * kHeadDim, lora_rank, scale, generator, "layers_0_k_proj");
@@ -248,13 +249,13 @@ ops::TensorPtr LlamaPrefixBlock::forward(
 std::vector<NamedLoraParameter> LlamaPrefixBlock::named_parameters() const {
     std::vector<NamedLoraParameter> result;
     result.reserve(14);
-    append_named(result, "q_proj", q_);
-    append_named(result, "k_proj", k_);
-    append_named(result, "v_proj", v_);
-    append_named(result, "o_proj", o_);
-    append_named(result, "gate_proj", gate_);
-    append_named(result, "up_proj", up_);
-    append_named(result, "down_proj", down_);
+    append_named(result, "layers." + std::to_string(layer_index_) + ".q_proj", q_);
+    append_named(result, "layers." + std::to_string(layer_index_) + ".k_proj", k_);
+    append_named(result, "layers." + std::to_string(layer_index_) + ".v_proj", v_);
+    append_named(result, "layers." + std::to_string(layer_index_) + ".o_proj", o_);
+    append_named(result, "layers." + std::to_string(layer_index_) + ".gate_proj", gate_);
+    append_named(result, "layers." + std::to_string(layer_index_) + ".up_proj", up_);
+    append_named(result, "layers." + std::to_string(layer_index_) + ".down_proj", down_);
     return result;
 }
 

@@ -45,6 +45,11 @@ def test_status_remains_readable_during_aggregation(monkeypatch):
         assert final['phase'] == 'COMPLETE'
         assert [e['phase'] for e in final['events']] == ['IDLE','WAITING','WAITING','AGGREGATING','COMPLETE']
         assert final['runId'] == 'status-test'
+        clients = {client['id']: client for client in final['clients']}
+        assert set(clients) == {'a', 'b'}
+        assert clients['a']['state'] == 'Uploaded'
+        assert clients['a']['sequences'] == 1
+        assert clients['a']['bytes'] == 4
     finally:
         release.set()
         server.shutdown()

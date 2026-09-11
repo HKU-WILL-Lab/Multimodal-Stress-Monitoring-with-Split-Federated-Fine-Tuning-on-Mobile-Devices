@@ -17,14 +17,19 @@ assets are listed in [`THIRD_PARTY_NOTICES.md`](../THIRD_PARTY_NOTICES.md).
 - Pretokenized labeled sensor JSONL generated with the matching Llama tokenizer.
 - Frozen 30-second ExecuTorch NormWear encoder that emits 162 sensor tokens.
 - OpenTSLM-SP alignment (`LayerNorm(768) -> Linear(768, 2048) -> GELU`).
-- LoRA adapters in the client-side first decoder block and main-server suffix.
+- LoRA adapters in the client-side decoder prefix and main-server suffix.
 - Protocol Buffer messages over gRPC; raw sensor windows remain on the client.
 
-The integrated native path uses `cut_layer=1`: the phone runs the embedding,
-OpenTSLM-SP alignment, and Llama 3.2 1B decoder block 0, while the main server
-runs blocks 1--15 and the language-model head. The projector and block-0 LoRA
-state participate in client-side aggregation; the frozen base block weights
-remain local and are never uploaded.
+The integrated native path supports `cut_layer=1..4`. With a cut of N, the
+phone runs the embedding, OpenTSLM-SP alignment and decoder blocks 0 through N−1;
+the main server runs blocks N through 15 and the language-model head. The
+projector and all phone-side block LoRA parameters participate in aggregation;
+frozen base weights stay local. The default example uses cut 1; the desktop
+five-step walkthrough uses cut 2.
+
+For the application-led workflow, start with
+[Running the full system](../README.md#running-the-full-system). The sections
+below describe asset preparation and direct command-line operation.
 
 This is research software, not a claim of production privacy or security.
 Boundary activations and gradients can reveal information and should be
@@ -41,8 +46,8 @@ protected in transit and handled according to the deployment's threat model.
 - A compatible ExecuTorch checkout and separately exported time-series `.pte`.
 - Separately obtained Llama 3.2 1B weights/tokenizer and labeled sensor data.
 
-Export the client-only token embedding and decoder-block-0 asset with
-`python -m sfl_clean.export_llama_embedding --model-dir <checkpoint> --output-dir <mobile-asset>`.
+Export the client-only token embedding and selected decoder prefix with
+`python -m sfl_clean.export_llama_embedding --model-dir <checkpoint> --output-dir <mobile-asset> --cut-layer <1-4>`.
 Only the remaining decoder blocks and output head stay on the main server.
 
 For post-training inference, the phone loads a full decoder exported for

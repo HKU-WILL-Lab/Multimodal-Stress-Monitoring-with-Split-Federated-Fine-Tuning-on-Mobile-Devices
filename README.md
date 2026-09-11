@@ -16,7 +16,8 @@ system described in the paper:
 - **Inference:** The C++ implementation connects the time-series encoder,
   modality-alignment layer, and LLM for on-device multimodal inference using
   ExecuTorch. Deployment scripts prepare the model assets for the phone.
-- **Applications:** Android and Wear OS code handles sensor collection,
+- **Applications:** The desktop application manages Main Server and Federated Server,
+  builds/deploys the phone runtime, and starts training. Android and Wear OS code handles sensor collection,
   watch-phone communication, and access to training and inference from the
   phone application.
 
@@ -72,6 +73,9 @@ flowchart LR
         SH -.-> A
         SH -.-> W
     end
+    D["server_app/<br/>Desktop UI · Build & Deploy · Start Training"]
+    D -->|Service processes| S
+    D -->|ADB deployment and session control| A
     T <-->|wellbeing_sfl_jni.cpp| AT
     I <-->|local_inference_jni.cpp| AI
 ```
@@ -92,6 +96,7 @@ documentation:
 │   ├── gradle/                # Gradle Wrapper
 │   ├── build.gradle.kts
 │   └── settings.gradle.kts
+├── server_app/               # Desktop UI, service control, and ADB deployment
 ├── sfl_runtime/
 │   ├── android/
 │   │   ├── src/               # Training, inference, and JNI implementations
@@ -112,12 +117,13 @@ documentation:
 
 ## Requirements
 
-### Python services and tests
+### Python services
 
 - Python 3.12-3.14
 - PyTorch 2.13.0
 - gRPC 1.83.0 and Protocol Buffers 7.35.1
 - A CUDA-capable host for model training
+- Node.js 22+ and Android SDK Platform Tools (ADB) for desktop-controlled deployment
 
 The pinned Python dependencies are declared in
 [`sfl_runtime/pyproject.toml`](sfl_runtime/pyproject.toml).
@@ -128,70 +134,128 @@ The pinned Python dependencies are declared in
 - A JDK compatible with Android Gradle Plugin 9.2.0
 - Android NDK r29 for the native SFL runtime
 - An arm64 Android phone
-- A Wear OS watch, or the included synthetic-watch build variant
+- A Wear OS watch for live sensing, or the included synthetic-watch build variant
 - Samsung Health Sensor SDK 1.4.1 for physical Galaxy Watch8 sensing
 
 Building the native SFL runtime additionally requires Visual Studio 2022 C++
 Build Tools, gRPC v1.83.0 source, a compatible ExecuTorch checkout, and
 MobileFineTuner at commit `b62d3b12a597e05489e6e8ef025527c613c94837`.
 
-## Quick checks
-
-These checks validate the public source without requiring model weights,
-K-EmoCon data, or the Samsung SDK.
-
-### Python tests
-
-From the repository root:
-
-```powershell
-cd sfl_runtime
-powershell -ExecutionPolicy Bypass -File scripts/build_host.ps1
-```
-
-The script creates `.venv`, installs the pinned package and development
-dependencies, generates the Python protobuf bindings, and runs the test suite.
-
-### Android and synthetic-watch builds
-
-```powershell
-cd apps
-.\gradlew.bat :shared:test
-.\gradlew.bat :phone:assembleDebug :wear:assembleDemoDebug
-```
-
-These commands validate the shared application logic and build the phone plus
-synthetic-watch variants. The phone UI can be built without native SFL libraries;
-training and model inference require the separately built JNI runtimes.
-
 ## Running the full system
 
-Full SFL training requires separately obtained Llama 3.2 1B weights and
-tokenizer, a compatible time-series encoder exported to ExecuTorch, labeled
-sensor data such as K-EmoCon, the native Android toolchain, and reachable main
-and federated servers. Physical Watch8 sensing additionally requires the
-Samsung Health Sensor SDK.
+Start with **training**, then configure **inference in the same phone app**.
+The desktop application has two pages: **Main Server** runs the remaining
+Transformer blocks, and **Federated Server** aggregates phone-side updates.
+The walkthrough below uses one Windows computer for both server processes and
+one Android phone. The two roles remain separate services.
 
-Detailed preparation, build, staging, and execution commands are provided in:
+### 1. Download the source
 
-- [SFL runtime documentation](sfl_runtime/README.md)
-- [Native Android build and deployment](sfl_runtime/android/README.md)
-- [Phone and Wear OS application modules](apps/README.md)
-- [Phone UI, device setup, and wireless training](docs/PHONE_UI.md)
-- [Reproducibility notes](docs/REPRODUCIBILITY.md)
+```powershell
+git clone https://github.com/HKU-WILL-Lab/Multimodal-Stress-Monitoring-with-Split-Federated-Fine-Tuning-on-Mobile-Devices.git MobiWellbeing
+cd MobiWellbeing
+```
 
-## Current implementation status
+### 2. Prepare and install the applications once
 
-- Python protocol, server, aggregation, and dataset utilities are implemented
-  and covered by tests.
-- Native Android SFL training has been exercised on physical phones with
-  separately supplied runtime assets.
-- Phone UI and synthetic-watch application builds have been verified.
-- Five-step phone training with cut_layer=1 has completed over both USB and
-  wireless ADB, including gradient exchange and federated aggregation.
-- Physical Watch8 sensing requires the separately obtained Samsung SDK.
-- Full local post-training inference requires a compatible embedding-input
-  Llama decoder export and the matching trained alignment checkpoint.
+Follow [Desktop application setup](server_app/README.md#first-time-setup) in order:
+
+1. Install the Python dependencies and Android build tools.
+2. Build the native libraries and prepare the Llama checkpoint, frozen sensor
+   encoder, and labeled training dataset.
+3. Install the phone app and copy its encoder and dataset to the phone.
+4. Install **MobiWellbeing Server** on the computer and configure its build-tool
+   and asset paths.
+
+The phone APK includes both training and inference JNI libraries. Model weights,
+encoder exports and datasets are supplied separately. The desktop application
+uses the installed Python/CUDA environment and Android toolchain to build and
+deploy the phone application.
+
+### 3. Connect the phone
+
+Enable **USB debugging**, connect the phone, and accept its debugging
+permission prompt. Alternatively, pair and connect **wireless ADB** as described
+in [Phone connection](server_app/README.md#connect-the-phone).
+
+Open **MobiWellbeing Server** from the desktop or Start menu and select
+**Main Server (Training)**. Keep the phone unlocked. In **New Training**, select
+the phone under **ADB Phone**. Click **Refresh Phones** if it is not listed.
+This refreshes the device list; it does not stop servers or reset a training run.
+
+### 4. Choose the training configuration and deploy it
+
+For the first run, select **Cutting Layer = 2** and **Steps = 5**.
+The one-time setup uses one round and one participating phone, so this runs
+five steps in total. **Steps** controls local steps per round; the number of
+rounds comes from the server configuration.
+
+Click **Build & Deploy** and wait until the deployment message says the selected
+cutting layer is deployed and the steps are ready. The application:
+
+- builds the native runtime and debug APK;
+- exports the embedding and the selected number of phone-side decoder blocks;
+- installs the APK and transfers the weights;
+- creates a new run ID and matching phone/server configurations;
+- configures the phone's paths and ADB port forwarding.
+
+With Cutting Layer 2, the phone runs decoder blocks 0–1 and the main server runs
+blocks 2–15 and the output head. The selector supports 1–4. Changing the selection
+requires **Build & Deploy** before starting the new configuration.
+
+### 5. Start training from the computer
+
+Click **Start Training**. It starts both local server services, waits for them to
+be ready, and tells the prepared phone to begin. There is no need to click
+**Start Main Server** separately or tap Start on the phone.
+
+On **Main Server**, watch the step count, real PPL points, and per-step logs.
+On **Federated Server**, watch uploads, aggregation, and round completion.
+The phone's **Training** page shows the same run's progress and Cutting Layer.
+Wait for both the phone training and federated aggregation to complete.
+Metrics and checkpoints are saved at the run's configured paths; logs can be
+exported from the desktop pages. The five-step USB workflow has been exercised
+with Cutting Layer 2, including matching phone/server losses and saved prefix
+and suffix checkpoints.
+
+### 6. Run another session
+
+Once the current training has finished, change the layer or step count as needed,
+then repeat **Build & Deploy → Start Training**. Repeat deployment even when
+reusing the same settings: it prepares a fresh run and retains previous results.
+You do not need to click **Stop Server** first; preparation stops the old local
+services when the new phone configuration is ready.
+
+| Control | Purpose |
+| --- | --- |
+| Refresh Phones | Refresh the list of ADB-authorized phones. |
+| Build & Deploy | Build/install the phone runtime, transfer weights, and prepare a new matching run. |
+| Start Training | Start both local services and then start the prepared phone session. |
+| Start Main Server / Start Federated Server | Start only the service for that page; useful for manual service operation. |
+| Stop Server | Stop that page's service; doing so during training interrupts the run. |
+| Exit App | Stop the application's local services and exit the backend; the window can then be closed. |
+| Auto-Scroll | Follow new log entries. Turning it off keeps your reading position while logs continue updating. |
+
+### 7. Configure inference in the same phone application
+
+Prepare the trained alignment checkpoint, compatible embedding-input decoder
+export, encoder and tokenizer using the
+[inference staging instructions](sfl_runtime/README.md). Copy the deployment
+directory to the phone. In phone **Settings**, select its inference deployment
+JSON and tap **Load local model**.
+
+For live signals, install the [Wear OS application](apps/README.md), pair the
+watch with the phone, and use the same application ID and signing key on both.
+The watch sends sensor windows to the phone; the phone runs local inference and
+displays the result on **Vitals**. Training and inference use the same phone app;
+the desktop application provides training services. Training completion and
+inference model staging are separate steps.
+
+Training on the prepared labeled dataset does not require a connected watch.
+
+For details beyond this walkthrough, see the [desktop setup](server_app/README.md),
+[native runtime and asset preparation](sfl_runtime/README.md),
+[phone interface](docs/PHONE_UI.md), and [watch setup](apps/README.md).
 
 ## Acknowledgements
 

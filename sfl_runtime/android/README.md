@@ -6,13 +6,16 @@ configuration remain explicit CLI inputs: client ID, local model directory,
 private dataset, and deterministic partition index/count. Host bind addresses
 from the shared file are converted to loopback targets for `adb reverse`.
 
-The current Llama client splits after decoder block 0. It loads the frozen
-Llama 3.2 1B token embedding and first-block weights, runs a frozen 30-second
-NormWear encoder with ExecuTorch, and applies the OpenTSLM-SP token-wise
-projector (`LayerNorm -> Linear -> GELU`). Decoder block 0 and its LoRA adapters
-run on the phone; the server receives its boundary activations, never the raw
-sensor window. Dataset records are pretokenized with the exact Llama tokenizer
-so Python and C++ cannot silently disagree about token IDs.
+The Llama client supports `cut_layer=1..4`. With a cut of N, it loads the
+frozen Llama 3.2 1B embedding and first N decoder blocks, runs a frozen
+30-second NormWear encoder through ExecuTorch, and applies the OpenTSLM-SP
+projector (`LayerNorm -> Linear -> GELU`). The phone trains the projector and
+prefix LoRA adapters; the server receives boundary activations after block N−1.
+Dataset records are pretokenized with the matching Llama tokenizer.
+
+For desktop-controlled deployment and training, follow
+[Running the full system](../../README.md#running-the-full-system). The commands
+below are the native build and manual client workflow.
 
 Build with `SFL_ENABLE_EXECUTORCH_ENCODER=ON` and set
 `EXECUTORCH_SOURCE_DIR` to the same ExecuTorch checkout used during `.pte`

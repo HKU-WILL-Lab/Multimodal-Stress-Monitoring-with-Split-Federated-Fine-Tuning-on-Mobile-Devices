@@ -352,11 +352,15 @@ int run_client(const ClientOptions& options, TrainingObserver* observer) {
         options.encoder_output_width);
     auto embedding = load_llama32_embedding(options.model_dir);
     AlignmentProjector projector(options.encoder_output_width, 2048);
-    LlamaPrefixBlock prefix_block(
-        options.model_dir, options.lora_rank, options.lora_alpha);
+    std::vector<std::unique_ptr<LlamaPrefixBlock>> prefix_blocks;
     auto named_parameters = projector.named_parameters();
-    auto prefix_parameters = prefix_block.named_parameters();
-    named_parameters.insert(named_parameters.end(), prefix_parameters.begin(), prefix_parameters.end());
+    for (std::uint32_t layer = 0; layer < options.cut_layer; ++layer) {
+        auto block = std::make_unique<LlamaPrefixBlock>(
+            options.model_dir, options.lora_rank, options.lora_alpha, 42, layer);
+        auto block_parameters = block->named_parameters();
+        named_parameters.insert(named_parameters.end(), block_parameters.begin(), block_parameters.end());
+        prefix_blocks.push_back(std::move(block));
+    }
     std::vector<ops::TensorPtr> parameters;
     parameters.reserve(named_parameters.size());
     for (const auto& item : named_parameters) parameters.push_back(item.tensor);
@@ -432,7 +436,8 @@ int run_client(const ClientOptions& options, TrainingObserver* observer) {
             auto native_attention = std::make_shared<ops::Tensor>(
                 std::vector<std::int64_t>{batch.batch_size, conditioned_length},
                 attention32.data(), ops::kInt32, ops::kCPU);
-            auto activation = prefix_block.forward(conditioned.embeddings, native_attention);
+            auto activation = conditioned.embeddings;
+            for (const auto& block : prefix_blocks) activation = block->forward(activation, native_attention);
 
             ::sfl::clean::v1::SplitStepRequest request;
             request.set_protocol_version(options.protocol_version);

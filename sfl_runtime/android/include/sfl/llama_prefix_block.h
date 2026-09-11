@@ -11,14 +11,15 @@
 
 namespace sflclean {
 
-// The first decoder block of Llama 3.2 1B. Frozen base weights are read from
+// One indexed decoder block of Llama 3.2 1B. Frozen base weights are read from
 // the Hugging Face checkpoint; only its LoRA branches are trainable.
 class LlamaPrefixBlock {
 public:
     LlamaPrefixBlock(const std::string& model_dir,
                      std::uint32_t lora_rank,
                      float lora_alpha,
-                     std::uint64_t seed = 42);
+                     std::uint64_t seed = 42,
+                     std::uint32_t layer_index = 0);
 
     // hidden_states: [batch, sequence, 2048]
     // attention_mask: [batch, sequence], int32, where one means visible.
@@ -27,6 +28,7 @@ public:
     std::vector<NamedLoraParameter> named_parameters() const;
 
 private:
+    std::uint32_t layer_index_;
     struct Weights {
         ops::TensorPtr input_norm;
         ops::TensorPtr post_attention_norm;

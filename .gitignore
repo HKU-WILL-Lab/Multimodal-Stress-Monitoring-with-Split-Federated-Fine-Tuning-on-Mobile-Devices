@@ -101,3 +101,6 @@ Thumbs.db
 !apps/phone/src/main/assets/
 !apps/phone/src/main/assets/**
 node_modules/
+
+# Local desktop build-tool paths and phone deployment settings
+/deployment.json

@@ -79,6 +79,7 @@ class RoundCoordinator:
                     raise DuplicateUpdate(
                         "coordinator is already bootstrapped with a different prefix state"
                     )
+            self.status.client(client_id, state='Training', round=self._global_round)
             return self._snapshot(RoundState.TRAIN)
 
     def fetch(self, client_id: str, last_completed_round: int) -> RoundSnapshot:
@@ -132,6 +133,9 @@ class RoundCoordinator:
                         f"expected {tuple(current[name].shape)}"
                     )
             self._submissions[client_id] = update
+            self.status.client(client_id, state='Uploaded', round=global_round,
+                               sequences=processed_sequences,
+                               bytes=sum(t.numel() * t.element_size() for t in update.tensors.values()))
             if len(self._submissions) < self._quorum:
                 self.status.publish('WAITING', self._global_round, len(self._submissions), self._quorum)
                 return self._snapshot(RoundState.WAIT)

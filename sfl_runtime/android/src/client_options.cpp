@@ -268,8 +268,8 @@ ClientOptions parse_client_options(int argc, char** argv) {
         options.poll_interval_ms == 0 || options.max_message_bytes == 0) {
         throw std::invalid_argument("numeric options are outside their supported positive ranges");
     }
-    if (options.cut_layer != 1) {
-        throw std::invalid_argument("the mobile runtime requires cut_layer=1");
+    if (options.cut_layer < 1 || options.cut_layer > 4) {
+        throw std::invalid_argument("the mobile runtime supports cut_layer=1..4");
     }
     return options;
 }
