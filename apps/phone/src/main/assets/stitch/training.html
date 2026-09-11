@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html class="light" lang="en" style=""><head><link rel="stylesheet" href="training.css"><link rel="stylesheet" href="vendor/inter.css"><link rel="stylesheet" href="vendor/symbols.css"></head><body class="antialiased font-body-md selection:bg-primary selection:text-on-primary"><svg class="inline-defs-container" aria-hidden="true" style="position:absolute;width:0;height:0;overflow:hidden"></svg>
+<meta charset="utf-8">
+<meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" name="viewport">
+<title>Mobile App Training - SFL Progress</title>
+
+
+
+
+<!-- Tailwind Configuration -->
+
+
+
+
+
+<!-- Top App Bar Shell (from JSON) -->
+<header class="sticky top-0 z-50 flex justify-between items-center px-container-margin w-full h-16 bg-surface/80 dark:bg-surface-dim/80 backdrop-blur-xl shadow-sm">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-primary dark:text-primary-fixed" style="font-variation-settings: 'FILL' 0;">psychology</span>
+<h1 class="font-headline-md text-headline-md font-bold text-primary dark:text-primary-fixed">Cognitive Sanctuary</h1>
+</div>
+<button aria-label="Profile" class="flex items-center justify-center p-2 rounded-full hover:bg-primary/5 transition-colors text-on-surface-variant" data-page="settings">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 0;">account_circle</span>
+</button>
+</header>
+<!-- Main Content Area -->
+<main class="px-container-margin pt-stack-lg pb-section-gap flex flex-col gap-stack-lg max-w-lg mx-auto">
+<header class="mb-stack-sm">
+<h2 class="font-headline-lg-mobile text-headline-lg-mobile text-on-surface">SFL Training Progress</h2>
+<p class="font-body-md text-body-md text-on-surface-variant mt-1">Split Federated Learning Session</p>
+</header>
+<!-- Section 1: Current Progress (Circular Gauge) -->
+<section class="glass-card rounded-xl p-stack-lg flex flex-col items-center justify-center relative overflow-hidden">
+<!-- Decorative background blur -->
+<div class="absolute -top-10 -right-10 w-32 h-32 bg-secondary-container/30 rounded-full blur-2xl"></div>
+<h3 class="font-label-md text-label-md text-on-surface-variant mb-stack-lg w-full text-left uppercase tracking-wider">Current Step</h3>
+<div class="relative w-48 h-48 flex items-center justify-center mb-stack-md">
+<svg class="w-full h-full" viewBox="0 0 120 120">
+<!-- Background Ring -->
+<circle class="text-surface-container-high" cx="60" cy="60" fill="transparent" r="52" stroke="currentColor" stroke-width="8"></circle>
+<!-- Progress Ring (Animated via inline JS below) -->
+<circle class="text-primary progress-ring__circle drop-shadow-md" cx="60" cy="60" fill="transparent" id="training-progress" r="52" stroke="currentColor" stroke-dasharray="326.72" stroke-dashoffset="326.72" stroke-linecap="round" stroke-width="8" style="stroke-dasharray: 326.726, 326.726; stroke-dashoffset: 104.552;"></circle>
+</svg>
+<div class="absolute flex flex-col items-center justify-center">
+<span class="font-headline-xl text-headline-xl text-primary font-bold" id="progress-text">71%</span>
+<span class="font-label-sm text-label-sm text-on-surface-variant" id="training-steps">Step 1,420 / 2,000</span>
+</div>
+</div>
+<p id="training-cutting-layer" style="font-size:12px;line-height:20px;color:#777587;margin:0 0 4px">Cutting Layer = –</p>
+<div class="flex items-center gap-2 mt-stack-sm bg-surface-container-low px-4 py-2 rounded-full border border-surface-container-highest">
+<span class="material-symbols-outlined text-secondary text-sm animate-pulse" style="font-variation-settings: 'FILL' 1;">sync</span>
+<span class="font-label-md text-label-md text-on-surface" id="training-message">Synchronizing with Edge Server...</span>
+</div>
+</section>
+<!-- Section 2: Training Metrics (Loss Curve) -->
+<section class="glass-card rounded-xl p-stack-lg"><div class="flex justify-between items-center mb-stack-md"><div class="flex items-center gap-2"><h3 class="font-label-md text-label-md text-on-surface-variant uppercase tracking-wider">Training Metrics</h3><span class="text-xs text-on-surface-variant/70 font-medium">(Perplexity)</span></div><span class="bg-secondary-container/20 text-on-secondary-container font-label-sm text-label-sm px-2 py-1 rounded-md border border-secondary-container/50" id="training-live">Live</span></div><div class="flex justify-between items-end mb-stack-md"><div><div class="flex items-baseline gap-2"><span class="font-headline-md text-headline-xl text-on-surface font-bold tracking-tight" id="training-ppl">14.28</span><span class="font-label-md text-label-md text-on-surface-variant">Current PPL</span></div><p class="font-label-sm text-label-sm text-secondary flex items-center gap-1 mt-0.5" id="training-change"><span class="material-symbols-outlined text-xs">trending_down</span>-68.4% since start</p></div><div class="text-right"><span class="font-label-sm text-label-sm text-on-surface-variant uppercase tracking-wider block">Progress</span><span class="font-label-md text-label-md font-semibold text-on-surface" id="training-metric-step">Step 1,420 <span class="text-on-surface-variant font-normal">/ 2,000</span></span></div></div><div class="h-36 w-full relative pt-2"><div class="flex gap-2 w-full h-28 relative items-stretch"><div class="flex flex-col justify-between text-[10px] text-outline font-medium py-1 select-none pr-1 text-right w-7" id="training-y-axis"><span class="leading-none">45.0</span><span class="leading-none">25.0</span><span class="leading-none">10.0</span></div><div class="relative flex-1 h-full"><svg class="w-full h-full overflow-visible" viewBox="0 0 280 90" preserveAspectRatio="none"><defs><linearGradient id="pplCleanGradient" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#4f46e5" stop-opacity="0.25"></stop><stop offset="100%" stop-color="#4f46e5" stop-opacity="0.0"></stop></linearGradient></defs><line stroke="#d3e4fe" stroke-dasharray="4,4" stroke-width="1" x1="0" y1="10" x2="280" y2="10"></line><line stroke="#d3e4fe" stroke-dasharray="4,4" stroke-width="1" x1="0" y1="45" x2="280" y2="45"></line><line stroke="#dce9ff" stroke-width="1" x1="0" y1="80" x2="280" y2="80"></line><path d="M 0,14 C 40,24 75,50 120,58 C 165,66 210,72 280,78 L 280,80 L 0,80 Z" fill="url(#pplCleanGradient)" id="training-area"></path><path d="M 0,14 C 40,24 75,50 120,58 C 165,66 210,72 280,78" fill="none" stroke="#4f46e5" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" id="training-line"></path></svg><div class="absolute inset-0 pointer-events-none" id="training-dots"><div class="absolute w-2.5 h-2.5 rounded-full bg-surface border-2 border-primary -translate-x-1/2 -translate-y-1/2" style="left: 0%; top: 15.5%;"></div><div class="absolute w-2.5 h-2.5 rounded-full bg-surface border-2 border-primary -translate-x-1/2 -translate-y-1/2" style="left: 42.8%; top: 64.4%;"></div><div class="absolute w-3 h-3 rounded-full bg-primary border-2 border-surface shadow-sm -translate-x-1/2 -translate-y-1/2" style="left: 100%; top: 86.6%;"></div></div></div></div><div class="flex justify-between items-center text-[11px] text-on-surface-variant/70 font-medium mt-2 pl-9 pr-1 border-t border-surface-container-highest pt-2" id="training-x-axis"><span class="">200</span><span class="">500</span><span class="">800</span><span class="">1,100</span><span class="text-primary font-semibold">1,420</span><span class="">2,000</span></div></div></section>
+<!-- Section 3: SFL Status (List) -->
+<section class="glass-card rounded-xl p-stack-lg">
+<h3 class="font-label-md text-label-md text-on-surface-variant mb-stack-md uppercase tracking-wider">System Status</h3>
+<div class="flex flex-col gap-stack-md">
+<!-- Status Item 1 -->
+<div class="flex items-center justify-between p-stack-md rounded-lg bg-surface-container-lowest border border-surface-container-high transition-colors hover:bg-surface-container-low">
+<div class="flex items-center gap-3">
+<div class="w-8 h-8 rounded-full bg-primary-container/20 flex items-center justify-center text-primary">
+<span class="material-symbols-outlined text-sm" style="font-variation-settings: 'FILL' 1;">memory</span>
+</div>
+<span class="font-label-md text-label-md text-on-surface">Client LoRA Update</span>
+</div>
+<div class="flex items-center gap-1.5">
+<span class="w-2 h-2 rounded-full bg-secondary"></span>
+<span class="font-label-sm text-label-sm text-secondary" id="status-lora">Complete</span>
+</div>
+</div>
+<!-- Status Item 2 -->
+<div class="flex items-center justify-between p-stack-md rounded-lg bg-surface-container-lowest border border-surface-container-high transition-colors hover:bg-surface-container-low">
+<div class="flex items-center gap-3">
+<div class="w-8 h-8 rounded-full bg-tertiary-container/20 flex items-center justify-center text-tertiary">
+<span class="material-symbols-outlined text-sm" style="font-variation-settings: 'FILL' 1;">swap_horiz</span>
+</div>
+<span class="font-label-md text-label-md text-on-surface">Gradients Exchange</span>
+</div>
+<div class="flex items-center gap-1.5">
+<span class="w-2 h-2 rounded-full bg-tertiary"></span>
+<span class="font-label-sm text-label-sm text-tertiary" id="status-gradients">In Progress</span>
+</div>
+</div>
+<!-- Status Item 3 -->
+<div class="flex items-center justify-between p-stack-md rounded-lg bg-surface-container-lowest border border-surface-container-high transition-colors hover:bg-surface-container-low">
+<div class="flex items-center gap-3">
+<div class="w-8 h-8 rounded-full bg-primary-container/20 flex items-center justify-center text-primary">
+<span class="material-symbols-outlined text-sm" style="font-variation-settings: 'FILL' 1;">dns</span>
+</div>
+<span class="font-label-md text-label-md text-on-surface">Main Server Status</span>
+</div>
+<div class="flex items-center gap-1.5">
+<span class="w-2 h-2 rounded-full bg-secondary"></span>
+<span class="font-label-sm text-label-sm text-secondary" id="status-server">Connected</span>
+</div>
+</div>
+</div>
+</section>
+<p id="runtime-error" hidden="" role="alert" style="color: rgb(147, 0, 10); background: rgb(255, 218, 214); border-radius: 12px; padding: 16px; overflow-wrap: anywhere;"></p></main>
+<!-- Bottom Nav Bar Shell (from JSON) -->
+<nav class="fixed bottom-0 left-0 w-full z-50 flex justify-around items-center px-4 pb-safe h-20 bg-surface/70 dark:bg-surface-dim/70 backdrop-blur-2xl bg-surface-container-low/40 dark:bg-surface-container-highest/10 border-t border-white/20 shadow-[0_-4px_20px_rgba(0,0,0,0.05)] md:hidden">
+<!-- Vitals (Inactive) -->
+<a class="flex flex-col items-center justify-center text-on-surface-variant dark:text-outline-variant px-4 py-1 hover:scale-105 transition-transform" href="vitals.html" data-page="vitals">
+<span class="material-symbols-outlined mb-1" style="font-variation-settings: 'FILL' 0;">monitoring</span>
+<span class="font-label-sm text-label-sm">Vitals</span>
+</a>
+<!-- Training (Active) -->
+<a class="flex flex-col items-center justify-center bg-primary-container dark:bg-primary text-on-primary-container dark:text-on-primary rounded-full px-4 py-1 hover:scale-105 transition-transform scale-95 transition-all duration-150" href="training.html" data-page="training">
+<span class="material-symbols-outlined mb-1" style="font-variation-settings: 'FILL' 1;">hub</span>
+<span class="font-label-sm text-label-sm">Training</span>
+</a>
+<!-- Insights (Inactive) -->
+
+<!-- Settings (Inactive) -->
+<a class="flex flex-col items-center justify-center text-on-surface-variant dark:text-outline-variant px-4 py-1 hover:scale-105 transition-transform" href="settings.html" data-page="settings">
+<span class="material-symbols-outlined mb-1" style="font-variation-settings: 'FILL' 0;">settings</span>
+<span class="font-label-sm text-label-sm">Settings</span>
+</a>
+</nav>
+
+
+
+
+
+
+
+<script src="bridge.js"></script></body></html>

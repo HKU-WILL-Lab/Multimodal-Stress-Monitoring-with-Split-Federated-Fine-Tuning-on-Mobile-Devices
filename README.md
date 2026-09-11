@@ -20,7 +20,9 @@ system described in the paper:
   watch-phone communication, and access to training and inference from the
   phone application.
 
-The repository contains runtime code; the paper's visual UI is not included.
+The repository includes the phone UI: Vitals, Training, and Settings, connected
+to the native training/inference runtime. HTML, CSS, scripts, and fonts are
+bundled locally so the interface renders without a CDN connection.
 Model weights, datasets, exported models, checkpoints, SDK binaries, and APKs
 are obtained or generated separately. External dependencies retain their own
 licenses; see [THIRD_PARTY_NOTICES.md](THIRD_PARTY_NOTICES.md).
@@ -159,8 +161,8 @@ cd apps
 ```
 
 These commands validate the shared application logic and build the phone plus
-synthetic-watch variants. The public app modules intentionally omit the paper's
-visual UI and can be built without the native SFL libraries.
+synthetic-watch variants. The phone UI can be built without native SFL libraries;
+training and model inference require the separately built JNI runtimes.
 
 ## Running the full system
 
@@ -175,6 +177,7 @@ Detailed preparation, build, staging, and execution commands are provided in:
 - [SFL runtime documentation](sfl_runtime/README.md)
 - [Native Android build and deployment](sfl_runtime/android/README.md)
 - [Phone and Wear OS application modules](apps/README.md)
+- [Phone UI, device setup, and wireless training](docs/PHONE_UI.md)
 - [Reproducibility notes](docs/REPRODUCIBILITY.md)
 
 ## Current implementation status
@@ -183,7 +186,9 @@ Detailed preparation, build, staging, and execution commands are provided in:
   and covered by tests.
 - Native Android SFL training has been exercised on physical phones with
   separately supplied runtime assets.
-- Phone and synthetic-watch application builds have been verified.
+- Phone UI and synthetic-watch application builds have been verified.
+- Five-step phone training with cut_layer=1 has completed over both USB and
+  wireless ADB, including gradient exchange and federated aggregation.
 - Physical Watch8 sensing requires the separately obtained Samsung SDK.
 - Full local post-training inference requires a compatible embedding-input
   Llama decoder export and the matching trained alignment checkpoint.

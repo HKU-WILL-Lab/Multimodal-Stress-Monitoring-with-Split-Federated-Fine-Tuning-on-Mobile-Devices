@@ -1,0 +1,10 @@
+{
+  "name": "mobiwellbeing-phone-ui-checks",
+  "private": true,
+  "scripts": {
+    "test:ui": "node scripts/check_training_chart.cjs"
+  },
+  "devDependencies": {
+    "playwright": "1.62.1"
+  }
+}

@@ -96,3 +96,8 @@ credentials/
 .vscode/
 .DS_Store
 Thumbs.db
+
+# Bundled phone presentation assets (HTML/CSS/JS and redistributable fonts)
+!apps/phone/src/main/assets/
+!apps/phone/src/main/assets/**
+node_modules/

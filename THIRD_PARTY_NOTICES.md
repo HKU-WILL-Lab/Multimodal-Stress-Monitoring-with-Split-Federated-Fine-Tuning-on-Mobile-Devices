@@ -101,6 +101,21 @@ Its source code and pretrained weights are obtained separately.
 }
 ```
 
+### Bundled phone UI fonts and styles
+
+The phone UI includes unmodified Inter and Material Symbols Outlined font binaries
+retrieved through Google Fonts, plus CSS generated using Tailwind CSS. The Tailwind
+browser compiler is not bundled. The edited HTML/CSS and native bindings are the
+phone presentation source used by this project.
+
+- **Inter:** Copyright 2016 The Inter Project Authors; [upstream](https://github.com/rsms/inter), SIL Open Font License 1.1.
+- **Material Symbols Outlined:** Copyright 2026 Google LLC; [upstream](https://github.com/google/material-design-icons), Apache License 2.0.
+- **Tailwind CSS:** Copyright Tailwind Labs, Inc.; [upstream](https://github.com/tailwindlabs/tailwindcss), MIT License.
+
+Full license texts are included in
+`apps/phone/src/main/assets/stitch/vendor/INTER-LICENSE.txt`,
+`MATERIAL-SYMBOLS-LICENSE.txt`, and `TAILWIND-LICENSE.txt`.
+
 ### Other dependencies
 
 PyTorch, Transformers, PEFT, AndroidX, Kotlin libraries and build tools, and

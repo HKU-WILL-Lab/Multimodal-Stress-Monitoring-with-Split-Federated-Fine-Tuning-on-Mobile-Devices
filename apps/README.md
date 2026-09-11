@@ -8,7 +8,8 @@ licensing and provenance are documented at the repository root.
 
 - `shared`: sensor-window binary protocol, affect mapping, trend text, tests.
 - `phone`: receives watch windows, invokes the training and inference bridges,
-  maintains scores/state/trend, and sends an alert to the watch.
+  displays the Vitals / Training / Settings UI, maintains scores/state/trend,
+  and sends an alert to the watch.
 - `wear`: captures a 30-second window and transfers it to the paired phone.
   The `demo` flavor uses deterministic synthetic signals. The `samsung`
   flavor uses Samsung Health Sensor SDK on Galaxy Watch8.
@@ -95,3 +96,14 @@ For debug deployment, copy the complete inference directory to the app's
 external files directory (normally
 `/sdcard/Android/data/org.mobihoc.wellbeing/files/inference`). No broad storage
 permission is required because this directory belongs to the app.
+
+## Phone UI
+
+The launcher activity loads bundled pages from `phone/src/main/assets/stitch/`.
+`StitchActivity.kt` bridges UI actions to the application-owned `WellbeingController`;
+watch messages and UI actions share the same runtime across activity recreation.
+The native libraries and trained model assets are unchanged by this presentation layer.
+
+See [phone setup and debugging](../docs/PHONE_UI.md) for runtime assets, training
+configuration, USB/wireless forwarding, and UI checks. The existing Wear OS module
+remains the sensing/transport implementation; this update adds only the phone UI.

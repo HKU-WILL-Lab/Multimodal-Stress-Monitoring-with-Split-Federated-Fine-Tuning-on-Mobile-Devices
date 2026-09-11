@@ -11,6 +11,7 @@ from typing import Mapping
 import torch
 
 from .aggregation import WeightedState, validate_lora_state, weighted_average
+from .aggregation_status import AggregationStatus
 from .checkpoint import save_lora_checkpoint
 from .errors import DuplicateUpdate, InvalidRequest, NotBootstrapped, StateConflict
 
@@ -59,6 +60,7 @@ class RoundCoordinator:
         self._completed_round = 0
         self._global_state: dict[str, torch.Tensor] | None = None
         self._submissions: dict[str, WeightedState] = {}
+        self.status = AggregationStatus(submission_quorum)
 
     def bootstrap(self, client_id: str, tensors: Mapping[str, torch.Tensor]) -> RoundSnapshot:
         _validate_client_id(client_id)
@@ -67,6 +69,7 @@ class RoundCoordinator:
         with self._lock:
             if self._global_state is None:
                 self._global_state = proposed
+                self.status.publish('WAITING', self._global_round, 0, self._quorum)
             else:
                 if set(proposed) != set(self._global_state) or any(
                     proposed[name].shape != self._global_state[name].shape
@@ -130,17 +133,25 @@ class RoundCoordinator:
                     )
             self._submissions[client_id] = update
             if len(self._submissions) < self._quorum:
+                self.status.publish('WAITING', self._global_round, len(self._submissions), self._quorum)
                 return self._snapshot(RoundState.WAIT)
 
             finished_round = self._global_round
-            aggregated = weighted_average(list(self._submissions.values()))
-            self._save_checkpoint(finished_round, aggregated)
+            self.status.publish('AGGREGATING', finished_round, len(self._submissions), self._quorum)
+            try:
+                aggregated = weighted_average(list(self._submissions.values()))
+                self._save_checkpoint(finished_round, aggregated)
+            except BaseException:
+                self.status.publish('FAILED', finished_round, len(self._submissions), self._quorum)
+                raise
             self._global_state = aggregated
             self._completed_round = finished_round
             self._submissions.clear()
             if self._completed_round >= self._total_rounds:
+                self.status.publish('COMPLETE', finished_round, self._quorum, self._quorum)
                 return self._snapshot(RoundState.DONE)
             self._global_round += 1
+            self.status.publish('WAITING', self._global_round, 0, self._quorum)
             return self._snapshot(RoundState.TRAIN)
 
     def _require_state(self) -> dict[str, torch.Tensor]:

@@ -2,7 +2,7 @@ package org.mobihoc.wellbeing.phone
 
 import android.app.Application
 
-/** Owns the headless phone runtime independently of any visual interface. */
+/** Owns one shared runtime across the phone UI and incoming watch messages. */
 class MobiWellbeingApplication : Application() {
     lateinit var wellbeingController: WellbeingController
         private set
